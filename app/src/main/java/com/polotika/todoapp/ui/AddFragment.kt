@@ -1,18 +1,16 @@
 package com.polotika.todoapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
-import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.databinding.FragmentAddBinding
 
 

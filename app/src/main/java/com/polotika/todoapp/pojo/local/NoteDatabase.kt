@@ -1,11 +1,12 @@
-package com.polotika.todoapp.data
+package com.polotika.todoapp.pojo.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.pojo.utils.PriorityConverter
 
 @Database(entities = arrayOf(NoteModel::class), version = 2, exportSchema = false)
 @TypeConverters(PriorityConverter::class)
@@ -23,7 +24,7 @@ abstract class NoteDatabase : RoomDatabase() {
             if (mINSTANCE == null) {
 
                 synchronized(NoteDatabase::class){
-                    if (mINSTANCE==null){
+                    if (mINSTANCE ==null){
                         mINSTANCE = Room.databaseBuilder(
                             context.applicationContext,
                             NoteDatabase::class.java,

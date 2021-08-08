@@ -6,9 +6,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.polotika.todoapp.data.NoteDatabase
-import com.polotika.todoapp.data.models.NoteModel
-import com.polotika.todoapp.data.repository.NotesRepository
+import com.polotika.todoapp.pojo.local.NoteDatabase
+import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.pojo.data.repository.NotesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -19,6 +19,8 @@ public class NotesViewModel(application: Application):AndroidViewModel(applicati
     private val repository :NotesRepository
     val getAllNotes :LiveData<List<NoteModel>>
     val isEmptyList = MutableLiveData(false)
+
+
 
     val title = MutableLiveData<String>()
     val desc = MutableLiveData<String>()
@@ -38,6 +40,19 @@ public class NotesViewModel(application: Application):AndroidViewModel(applicati
         Log.d(TAG, "addNote: note")
 
     }
+
+    fun searchInDatabase(query:String):LiveData<List<NoteModel>>{
+        return repository.searchInDatabase(query)
+    }
+
+    fun sortByHighPriority():LiveData<List<NoteModel>>{
+        return repository.sortByHighPriority()
+    }
+
+    fun sortByLowPriority():LiveData<List<NoteModel>>{
+        return repository.sortByLowPriority()
+    }
+
 
     fun updateNote(note: NoteModel) {
         viewModelScope.launch(Dispatchers.IO) {

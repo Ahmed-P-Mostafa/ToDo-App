@@ -2,15 +2,8 @@ package com.polotika.todoapp.ui
 
 import android.app.Application
 import android.text.TextUtils
-import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.lifecycle.AndroidViewModel
-import com.polotika.todoapp.R
-import com.polotika.todoapp.data.models.PriorityModel
+import com.polotika.todoapp.pojo.data.models.PriorityModel
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "SharedViewModel"

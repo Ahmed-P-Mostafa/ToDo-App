@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.polotika.todoapp.ui.HomeFragment"
+        android:name="com.polotika.todoapp.ui.home.HomeFragment"
         android:label="ToDo App"
         tools:layout="@layout/fragment_home" >
         <action
@@ -47,6 +47,6 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="note"
-            app:argType="com.polotika.todoapp.data.models.NoteModel" />
+            app:argType="com.polotika.todoapp.pojo.data.models.NoteModel" />
     </fragment>
 </navigation>

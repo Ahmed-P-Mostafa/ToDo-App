@@ -1,8 +1,8 @@
-package com.polotika.todoapp.data.repository
+package com.polotika.todoapp.pojo.data.repository
 
 import androidx.lifecycle.LiveData
-import com.polotika.todoapp.data.NotesDao
-import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.pojo.local.NotesDao
+import com.polotika.todoapp.pojo.data.models.NoteModel
 
 class NotesRepository(private val notesDao: NotesDao) {
     fun getAllNotes():LiveData<List<NoteModel>> = notesDao.getAllNotes()
@@ -21,6 +21,18 @@ class NotesRepository(private val notesDao: NotesDao) {
 
     suspend fun deleteAll(){
         notesDao.deleteAllNotes()
+    }
+
+    fun searchInDatabase(query:String):LiveData<List<NoteModel>>{
+        return notesDao.searchInDatabase(query = query)
+    }
+
+    fun sortByHighPriority():LiveData<List<NoteModel>>{
+        return notesDao.sortByHighPriority()
+    }
+
+    fun sortByLowPriority():LiveData<List<NoteModel>>{
+        return notesDao.sortByLowPriority()
     }
 
 }

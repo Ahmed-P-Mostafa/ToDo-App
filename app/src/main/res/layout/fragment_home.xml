@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.HomeFragment"
+        tools:context=".ui.home.HomeFragment"
         android:padding="4dp">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -25,7 +25,7 @@
             tools:layout_editor_absoluteY="-16dp"
             tools:listitem="@layout/note_item"
             android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             app:spanCount="2"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

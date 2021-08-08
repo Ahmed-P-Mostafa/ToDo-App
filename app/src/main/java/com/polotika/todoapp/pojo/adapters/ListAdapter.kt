@@ -1,30 +1,24 @@
-package com.polotika.todoapp.data
+package com.polotika.todoapp.pojo.adapters
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.polotika.todoapp.R
-import com.polotika.todoapp.data.models.NoteModel
-import com.polotika.todoapp.data.models.PriorityModel
 import com.polotika.todoapp.databinding.NoteItemBinding
-import com.polotika.todoapp.ui.HomeFragment
-import com.polotika.todoapp.ui.HomeFragmentDirections
+import com.polotika.todoapp.pojo.utils.NotesListDiffUtil
+import com.polotika.todoapp.pojo.data.models.NoteModel
 
-class ListAdapter(private var list: List<NoteModel>? = emptyList()) :
+class ListAdapter(var list: List<NoteModel>? = emptyList()) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     private val TAG = "ListAdapter"
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        return ViewHolder.from(parent= parent)
+        return ViewHolder.from(parent = parent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -42,7 +36,7 @@ class ListAdapter(private var list: List<NoteModel>? = emptyList()) :
         }
 
         companion object{
-            fun from(parent: ViewGroup):ViewHolder{
+            fun from(parent: ViewGroup): ViewHolder {
                 return ViewHolder(DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
                     R.layout.note_item, parent, false
