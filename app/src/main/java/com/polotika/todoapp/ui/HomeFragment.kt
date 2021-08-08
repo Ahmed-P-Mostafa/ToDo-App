@@ -3,6 +3,7 @@ package com.polotika.todoapp.ui
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -15,19 +16,21 @@ import com.polotika.todoapp.data.ListAdapter
 import com.polotika.todoapp.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
-    val viewModel :NotesViewModel by viewModels()
+    private val TAG = "HomeFragment"
+    private val viewModel :NotesViewModel by viewModels()
     lateinit var adapter :ListAdapter
+    private lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding: FragmentHomeBinding =
+        binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        binding.fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addFragment)
-        }
+        binding.lifecycleOwner = this
+        binding.vm = viewModel
+
         adapter = ListAdapter()
         binding.recyclerView.adapter = adapter
         setHasOptionsMenu(true)
@@ -40,12 +43,17 @@ class HomeFragment : Fragment() {
         observers()
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_menu,menu)
     }
     private fun observers(){
 
         viewModel.getAllNotes.observe(requireActivity(), Observer {
+            when(it.size){
+                0->viewModel.isEmptyList.value = true
+                else->viewModel.isEmptyList.value = false
+            }
             adapter.changeData(it)
         })
     }
@@ -71,8 +79,11 @@ class HomeFragment : Fragment() {
     private fun deleteAllNotes() {
         viewModel.deleteAllNotes()
         Toast.makeText(requireContext(), "deleted successfully", Toast.LENGTH_SHORT).show()
-        findNavController().navigate(R.id.action_updateFragment_to_homeFragment)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.unbind()
+    }
 
 }

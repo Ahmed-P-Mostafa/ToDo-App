@@ -18,6 +18,7 @@ public class NotesViewModel(application: Application):AndroidViewModel(applicati
     private val notesDao = NoteDatabase.getInstance(application.applicationContext).notesDao()
     private val repository :NotesRepository
     val getAllNotes :LiveData<List<NoteModel>>
+    val isEmptyList = MutableLiveData(false)
 
     val title = MutableLiveData<String>()
     val desc = MutableLiveData<String>()

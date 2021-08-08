@@ -20,7 +20,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:sendDataToUpdateFragment="@{note}">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/priority_indicator"
@@ -28,6 +29,7 @@
                 android:layout_height="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:parseCardColor="@{note.priority}"
                 app:cardBackgroundColor="@color/red"
                 app:cardCornerRadius="100dp"/>
 
