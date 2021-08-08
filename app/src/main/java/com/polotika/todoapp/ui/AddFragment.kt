@@ -1,24 +1,26 @@
 package com.polotika.todoapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.ArrayAdapter
+import android.widget.*
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
 import com.polotika.todoapp.data.models.NoteModel
-import com.polotika.todoapp.data.models.PriorityModel
 import com.polotika.todoapp.databinding.FragmentAddBinding
-import com.polotika.todoapp.databinding.FragmentHomeBinding
 
 
 class AddFragment : Fragment() {
+    private val TAG = "AddFragment"
 
     private val viewModel: NotesViewModel by viewModels()
+    private val sharedViewModel:SharedViewModel by viewModels()
     lateinit var binding: FragmentAddBinding
     val prioritiesList = listOf("Low Priority" , "Medium Priority","High Priority")
 
@@ -27,18 +29,32 @@ class AddFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add, container,false)
         val adapter = ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_list_item_1,
             prioritiesList
         )
         binding.priorityTv.setAdapter(adapter)
+
+        binding.priorityTv.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+
+            when (position) {
+                0-> {
+                    binding.priorityTv.setTextColor(ContextCompat.getColor(requireContext(),R.color.yellow))}
+                1-> {
+                    binding.priorityTv.setTextColor(ContextCompat.getColor(requireContext(),R.color.green))}
+                2-> {
+                    binding.priorityTv.setTextColor(ContextCompat.getColor(requireContext(),R.color.red))}
+            }
+        }
         setHasOptionsMenu(true)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -48,14 +64,17 @@ class AddFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_add -> {
-                if (validateUserData()) {
+                if (sharedViewModel.validateUserData(binding.titleEt.text.toString(),binding.descriptionEt.text.toString())) {
                     val note = NoteModel(
+                        id= 0,
                         title = binding.titleEt.text.toString(),
                         description = binding.descriptionEt.text.toString(),
-                        priority = getPriority(binding.priorityTv.text.toString())
+                        priority = sharedViewModel.getPriority(binding.priorityTv.text.toString())
                     )
                     viewModel.addNote(noteModel = note)
-                    Snackbar.make(binding.root, "Successfully added", Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "added successfully", Toast.LENGTH_SHORT)
+                        .show()
+
                     findNavController().navigate(R.id.action_addFragment_to_homeFragment)
                 } else {
                     Snackbar.make(binding.root, "Empty field", Snackbar.LENGTH_SHORT).show()
@@ -65,19 +84,8 @@ class AddFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getPriority(priority: String): PriorityModel {
-        return when (priority) {
-            "High Priority" -> PriorityModel.High
-            "Medium Priority" -> PriorityModel.Medium
-            "Low Priority" -> PriorityModel.Low
 
-            else -> PriorityModel.Low
-        }
-    }
 
-    private fun validateUserData(): Boolean {
-        return !(binding.titleEt.text.isNullOrBlank() || binding.descriptionEt.text.isNullOrBlank())
-    }
 
 
 }

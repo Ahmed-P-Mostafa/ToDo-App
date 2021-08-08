@@ -17,7 +17,7 @@ public class NotesViewModel(application: Application):AndroidViewModel(applicati
 
     private val notesDao = NoteDatabase.getInstance(application.applicationContext).notesDao()
     private val repository :NotesRepository
-    private val getAllNotes :List<NoteModel>
+    val getAllNotes :LiveData<List<NoteModel>>
 
     val title = MutableLiveData<String>()
     val desc = MutableLiveData<String>()
@@ -36,5 +36,22 @@ public class NotesViewModel(application: Application):AndroidViewModel(applicati
 
         Log.d(TAG, "addNote: note")
 
+    }
+
+    fun updateNote(note: NoteModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateNote(note)
+        }
+    }
+
+    fun deleteNote(note: NoteModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteNote(note)
+        }
+    }
+    fun deleteAllNotes(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
+        }
     }
 }

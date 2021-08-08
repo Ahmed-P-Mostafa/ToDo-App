@@ -1,64 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.UpdateFragment"
-    android:orientation="vertical"
-    android:padding="24dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/current_title_til"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:hint="@string/title"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/current_title_et"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    <data>
 
+    </data>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/current_priority_til"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-        app:endIconMode="dropdown_menu"
-
-        >
-        <AutoCompleteTextView
-            android:id="@+id/current_priority_tv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="none"
-            android:hint="@string/priority_high"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/current_description_til"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/description"
-        android:gravity="start|top"
+        tools:context=".ui.UpdateFragment"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/current_description_et"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/current_title_til"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="@string/title"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/current_title_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/current_priority_til"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            app:endIconMode="dropdown_menu"
+
+            >
+
+            <AutoCompleteTextView
+                android:id="@+id/current_priority_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"
+                android:hint="@string/priority_high"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/current_description_til"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textMultiLine"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:gravity="top|start"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="@string/description"
+            android:gravity="start|top"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/current_description_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textMultiLine"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:gravity="top|start" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-
-</LinearLayout>
+    </LinearLayout>
+</layout>

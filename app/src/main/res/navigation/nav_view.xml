@@ -45,5 +45,8 @@
             app:destination="@id/homeFragment"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="note"
+            app:argType="com.polotika.todoapp.data.models.NoteModel" />
     </fragment>
 </navigation>

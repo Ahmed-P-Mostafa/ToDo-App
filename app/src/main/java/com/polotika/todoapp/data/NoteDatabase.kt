@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.polotika.todoapp.data.models.NoteModel
 
-@Database(entities = arrayOf(NoteModel::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(NoteModel::class), version = 2, exportSchema = false)
 @TypeConverters(PriorityConverter::class)
 abstract class NoteDatabase : RoomDatabase() {
 
