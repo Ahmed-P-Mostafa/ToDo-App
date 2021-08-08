@@ -33,7 +33,8 @@
         <action
             android:id="@+id/action_addFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment" />
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/updateFragment"
@@ -43,8 +44,8 @@
         <action
             android:id="@+id/action_updateFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="note"
             app:argType="com.polotika.todoapp.pojo.data.models.NoteModel" />
