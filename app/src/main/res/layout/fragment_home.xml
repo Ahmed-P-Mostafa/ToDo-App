@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="com.polotika.todoapp.ui.NotesViewModel" />
+            type="com.polotika.todoapp.viewModel.NotesViewModel" />
         <import type="android.view.View"/>
 
     </data>
@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.HomeFragment"
+        tools:context=".ui.HomeFragment"
         android:padding="4dp">
 
         <androidx.recyclerview.widget.RecyclerView

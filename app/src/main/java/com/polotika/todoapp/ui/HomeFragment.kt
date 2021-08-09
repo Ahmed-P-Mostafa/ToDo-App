@@ -1,4 +1,4 @@
-package com.polotika.todoapp.ui.home
+package com.polotika.todoapp.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -18,7 +18,7 @@ import com.polotika.todoapp.pojo.adapters.SwipeHelper
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.utils.hideKeyboard
 import com.polotika.todoapp.pojo.utils.observeOnce
-import com.polotika.todoapp.ui.NotesViewModel
+import com.polotika.todoapp.viewModel.NotesViewModel
 
 class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     private val viewModel: NotesViewModel by viewModels()

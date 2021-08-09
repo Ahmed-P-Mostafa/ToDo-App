@@ -12,13 +12,15 @@ import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.databinding.FragmentAddBinding
+import com.polotika.todoapp.viewModel.NotesViewModel
+import com.polotika.todoapp.viewModel.SharedViewModel
 
 
 class AddFragment : Fragment() {
     private val TAG = "AddFragment"
 
     private val viewModel: NotesViewModel by viewModels()
-    private val sharedViewModel:SharedViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
     lateinit var binding: FragmentAddBinding
     val prioritiesList = listOf("Low Priority" , "Medium Priority","High Priority")
 

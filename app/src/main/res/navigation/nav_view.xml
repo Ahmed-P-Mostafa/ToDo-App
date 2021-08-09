@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.polotika.todoapp.ui.home.HomeFragment"
+        android:name="com.polotika.todoapp.ui.HomeFragment"
         android:label="ToDo App"
         tools:layout="@layout/fragment_home" >
         <action
