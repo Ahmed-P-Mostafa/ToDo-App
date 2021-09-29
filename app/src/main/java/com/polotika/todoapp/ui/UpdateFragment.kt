@@ -161,7 +161,7 @@ class UpdateFragment : Fragment() {
         ) {
             val note = getNote()
             notesViewModel.updateNote(note)
-            Toast.makeText(requireContext(), "updated successfully", Toast.LENGTH_SHORT).show()
+            Snackbar.make(requireContext(),requireView(), "updated successfully", Snackbar.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_updateFragment_to_homeFragment)
         } else Snackbar.make(binding.root, "data incomplete", Snackbar.LENGTH_SHORT).show()
 

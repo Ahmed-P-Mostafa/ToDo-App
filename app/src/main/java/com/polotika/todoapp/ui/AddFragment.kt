@@ -72,7 +72,7 @@ class AddFragment : Fragment() {
                         priority = sharedViewModel.getPriority(binding.priorityTv.text.toString())
                     )
                     viewModel.addNote(noteModel = note)
-                    Toast.makeText(requireContext(), "added successfully", Toast.LENGTH_SHORT)
+                    Snackbar.make(requireContext(),requireView(), "added successfully", Snackbar.LENGTH_SHORT)
                         .show()
 
                     findNavController().navigate(R.id.action_addFragment_to_homeFragment)

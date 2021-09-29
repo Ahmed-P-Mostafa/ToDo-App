@@ -20,6 +20,7 @@ import com.polotika.todoapp.pojo.utils.hideKeyboard
 import com.polotika.todoapp.pojo.utils.observeOnce
 import com.polotika.todoapp.viewModel.NotesViewModel
 
+
 class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     private val viewModel: NotesViewModel by viewModels()
     lateinit var adapter: ListAdapter

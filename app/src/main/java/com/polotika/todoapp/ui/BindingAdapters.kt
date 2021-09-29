@@ -8,7 +8,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.polotika.todoapp.R
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
-import com.polotika.todoapp.ui.home.HomeFragmentDirections
 
 class BindingAdapters {
 
