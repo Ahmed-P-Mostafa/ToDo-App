@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -41,13 +42,13 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
         swipeToDelete(binding.recyclerView)
         setHasOptionsMenu(true)
 
+
         hideKeyboard(requireActivity())
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         observers()
     }
 

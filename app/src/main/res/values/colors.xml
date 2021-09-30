@@ -5,8 +5,23 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <color name="black_900">#FF000000</color>
+    <color name="black_800">#212121</color>
+    <color name="black_700">#303030</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- ?xml version="1.0" encoding="UTF-8"? -->
+        <color name="primaryColor">#ffffff</color>
+        <color name="primaryLightColor">#ffffff</color>
+        <color name="primaryDarkColor">#cccccc</color>
+        <color name="secondaryColor">#ff4e6a</color>
+        <color name="secondaryLightColor">#ff8398</color>
+        <color name="secondaryDarkColor">#c60040</color>
+        <color name="primaryTextColor">#000000</color>
+        <color name="secondaryTextColor">#000000</color>
+
+    <color name="red_400">#FF1744</color>
+
 
 
     <color name="lightGray">#E6E6E6</color>
