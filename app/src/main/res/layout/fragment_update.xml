@@ -63,7 +63,10 @@
                 android:layout_height="match_parent"
                 android:inputType="textMultiLine"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:gravity="top|start" />
+                android:gravity="top|start"
+                android:linksClickable="true"
+                android:autoLink="all"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
 
