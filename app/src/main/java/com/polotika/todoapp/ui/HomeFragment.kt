@@ -86,7 +86,7 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     private fun restoreDeletedItem(view: View,deletedNote:NoteModel,position: Int){
-        Snackbar.make(view,"'${deletedNote.title}' Deleted",Snackbar.LENGTH_LONG).setAction("Undo") {
+        Snackbar.make(requireContext(),requireView(),"'${deletedNote.title}' Deleted",Snackbar.LENGTH_LONG).setAction("Undo") {
             viewModel.addNote(deletedNote)
             adapter.notifyItemChanged(position)
         }.show()

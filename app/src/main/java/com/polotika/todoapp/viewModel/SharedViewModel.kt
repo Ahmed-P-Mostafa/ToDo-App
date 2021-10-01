@@ -5,7 +5,7 @@ import android.text.TextUtils
 import androidx.lifecycle.AndroidViewModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
 
-class SharedViewModel(application: Application) : AndroidViewModel(application) {
+open class SharedViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "SharedViewModel"
 
 

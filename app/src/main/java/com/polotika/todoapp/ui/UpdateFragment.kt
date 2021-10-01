@@ -2,32 +2,37 @@ package com.polotika.todoapp.ui
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
+import com.polotika.todoapp.databinding.FragmentUpdateBinding
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
-import com.polotika.todoapp.databinding.FragmentUpdateBinding
 import com.polotika.todoapp.viewModel.NotesViewModel
-import com.polotika.todoapp.viewModel.SharedViewModel
+import kotlinx.coroutines.flow.collect
 
 
 class UpdateFragment : Fragment() {
 
     val args by navArgs<UpdateFragmentArgs>()
     lateinit var binding: FragmentUpdateBinding
-    val sharedViewModel: SharedViewModel by viewModels()
-    val notesViewModel: NotesViewModel by viewModels()
+    val viewModel: NotesViewModel by viewModels()
     val prioritiesList = listOf("Low Priority", "Medium Priority", "High Priority")
 
 
@@ -42,6 +47,9 @@ class UpdateFragment : Fragment() {
             container,
             false
         )
+        binding.note = args.note
+        viewModel.body.value = args.note.description
+        viewModel.title.value = args.note.title
         setHasOptionsMenu(true)
         binding.currentTitleEt.setText(args.note.title)
         binding.currentDescriptionEt.setText(args.note.description)
@@ -85,6 +93,16 @@ class UpdateFragment : Fragment() {
                 }
             }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+/*
+        viewModel.noteBodySingleLiveEvent.observe(viewLifecycleOwner, Observer {
+            Log.d("TAG", "onViewCreated: $it")
+            shareNote(it,"")
+        })*/
+
     }
 
     private fun getPriorityText(priority: PriorityModel): String {
@@ -132,6 +150,11 @@ class UpdateFragment : Fragment() {
         when (item.itemId) {
             R.id.menu_save -> updateNote()
             R.id.menu_delete -> showDialog()
+            R.id.menu_share -> lifecycleScope.launchWhenStarted {
+                    viewModel.com.collect {
+                        shareNote(it.second,it.first)
+                    }
+                }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -148,31 +171,41 @@ class UpdateFragment : Fragment() {
 
     private fun deleteNote() {
 
-        notesViewModel.deleteNote(getNote())
+        viewModel.deleteNote(getNote())
         Toast.makeText(requireContext(), "deleted successfully", Toast.LENGTH_SHORT).show()
         findNavController().navigate(R.id.action_updateFragment_to_homeFragment)
     }
 
     private fun updateNote() {
-        if (sharedViewModel.validateUserData(
+        if (viewModel.validateUserData(
                 binding.currentTitleEt.text.toString(),
                 binding.currentDescriptionEt.text.toString()
             )
         ) {
             val note = getNote()
-            notesViewModel.updateNote(note)
+            viewModel.updateNote(note)
             Snackbar.make(requireContext(),requireView(), "updated successfully", Snackbar.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_updateFragment_to_homeFragment)
-        } else Snackbar.make(binding.root, "data incomplete", Snackbar.LENGTH_SHORT).show()
+        } else Snackbar.make(requireContext(),requireView(), "data incomplete", Snackbar.LENGTH_SHORT).show()
 
     }
+
+    private fun shareNote(body:String,title:String){
+       val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        val shareMethod =  getString(R.string.share_method)
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, title)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, body)
+        startActivity(Intent.createChooser(shareIntent,shareMethod))
+    }
+
 
     private fun getNote(): NoteModel {
         return NoteModel(
             id = args.note.id,
             title = binding.currentTitleEt.text.toString(),
             description = binding.currentDescriptionEt.text.toString(),
-            priority = sharedViewModel.getPriority(binding.currentPriorityTv.text.toString())
+            priority = viewModel.getPriority(binding.currentPriorityTv.text.toString())
         )
 
     }

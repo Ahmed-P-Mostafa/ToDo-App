@@ -77,7 +77,7 @@ class AddFragment : Fragment() {
 
                     findNavController().navigate(R.id.action_addFragment_to_homeFragment)
                 } else {
-                    Snackbar.make(binding.root, "Empty field", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireContext(),requireView(), "Empty field", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
