@@ -22,6 +22,8 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="@{vm.isEmptyList() ? View.GONE : View.VISIBLE }"
+
             >
 
 
@@ -81,6 +83,8 @@
             android:orientation="vertical"
             android:visibility="@{vm.isEmptyList() ?View.VISIBLE:View.GONE }"
             tools:visibility="gone"
+            android:layout_gravity="center"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
