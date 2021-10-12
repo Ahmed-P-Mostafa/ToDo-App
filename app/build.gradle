@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
     id("androidx.navigation.safeargs.kotlin")
+    id'dagger.hilt.android.plugin'
 }
 
 android {
@@ -75,6 +76,10 @@ dependencies {
     // Kotlin components
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:2.38.1"
+    kapt "com.google.dagger:hilt-compiler:2.38.1"
 
 
 

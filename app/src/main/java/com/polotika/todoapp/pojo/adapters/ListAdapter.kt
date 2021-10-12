@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.NoteItemBinding
-import com.polotika.todoapp.pojo.utils.NotesListDiffUtil
 import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.pojo.utils.NotesListDiffUtil
 
 class ListAdapter(var list: List<NoteModel>? = emptyList()) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {

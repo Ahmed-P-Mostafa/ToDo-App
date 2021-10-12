@@ -10,17 +10,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
-import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.databinding.FragmentAddBinding
-import com.polotika.todoapp.viewModel.NotesViewModel
-import com.polotika.todoapp.viewModel.SharedViewModel
+import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.viewModel.AddViewModel
 
 
 class AddFragment : Fragment() {
     private val TAG = "AddFragment"
 
-    private val viewModel: NotesViewModel by viewModels()
-    private val sharedViewModel: SharedViewModel by viewModels()
+    private val viewModel: AddViewModel by viewModels()
     lateinit var binding: FragmentAddBinding
     val prioritiesList = listOf("Low Priority" , "Medium Priority","High Priority")
 
@@ -64,12 +62,12 @@ class AddFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_add -> {
-                if (sharedViewModel.validateUserData(binding.titleEt.text.toString(),binding.descriptionEt.text.toString())) {
+                if (viewModel.validateUserData(binding.titleEt.text.toString(),binding.descriptionEt.text.toString())) {
                     val note = NoteModel(
                         id= 0,
                         title = binding.titleEt.text.toString(),
                         description = binding.descriptionEt.text.toString(),
-                        priority = sharedViewModel.getPriority(binding.priorityTv.text.toString())
+                        priority = viewModel.getPriority(binding.priorityTv.text.toString())
                     )
                     viewModel.addNote(noteModel = note)
                     Snackbar.make(requireContext(),requireView(), "added successfully", Snackbar.LENGTH_SHORT)
