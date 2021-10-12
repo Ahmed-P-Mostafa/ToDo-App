@@ -3,8 +3,9 @@ package com.polotika.todoapp.pojo.data.repository
 import androidx.lifecycle.LiveData
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.local.NotesDao
+import javax.inject.Inject
 
-class NotesRepositoryImpl(private val notesDao: NotesDao) :NotesRepository {
+class NotesRepositoryImpl @Inject constructor(private val notesDao: NotesDao) :NotesRepository {
     override fun getAllNotes():LiveData<List<NoteModel>> = notesDao.getAllNotes()
 
     override suspend fun insertNote(noteModel: NoteModel){

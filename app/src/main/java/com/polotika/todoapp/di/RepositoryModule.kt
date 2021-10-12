@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -32,6 +33,12 @@ object RepositoryModule {
     @Singleton
     fun providesNotesDataBase(@ApplicationContext context:Context):NoteDatabase{
         return NoteDatabase.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDispatchers():Dispatchers{
+        return Dispatchers
     }
 
 }

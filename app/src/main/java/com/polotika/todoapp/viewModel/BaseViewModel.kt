@@ -1,23 +1,22 @@
 package com.polotika.todoapp.viewModel
 
-import android.app.Application
-import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.polotika.todoapp.R
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
-import com.polotika.todoapp.pojo.data.repository.NotesRepositoryImpl
+import com.polotika.todoapp.pojo.data.repository.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class BaseViewModel @Inject constructor(@ApplicationContext val application: Application, val repositoryImpl: NotesRepositoryImpl) : ViewModel() {
+open class BaseViewModel @Inject constructor(
+    private val dispatcher: Dispatchers,
+    val repository: NotesRepository
+) : ViewModel() {
     private val TAG = "SharedViewModel"
 
 
@@ -33,15 +32,15 @@ open class BaseViewModel @Inject constructor(@ApplicationContext val application
 
 
     fun deleteNote(note: NoteModel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repositoryImpl.deleteNote(note)
+        viewModelScope.launch(dispatcher.IO) {
+            repository.deleteNote(note)
         }
     }
 
     fun addNote(noteModel: NoteModel) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.IO) {
 
-            repositoryImpl.insertNote(noteModel = noteModel)
+            repository.insertNote(noteModel = noteModel)
         }
 
         Log.d(TAG, "addNote: note")

@@ -1,57 +1,42 @@
 package com.polotika.todoapp.viewModel
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.pojo.data.repository.NotesRepository
 import com.polotika.todoapp.pojo.data.repository.NotesRepositoryImpl
-import com.polotika.todoapp.pojo.local.NoteDatabase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(repositoryImpl: NotesRepositoryImpl,application: Application) :BaseViewModel(application, repositoryImpl) {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    repository: NotesRepository,
+    private val dispatchers: Dispatchers
+) : BaseViewModel(dispatchers, repository) {
     private val TAG = "HomeViewModel"
 
-    val getAllNotes :LiveData<List<NoteModel>> = repositoryImpl.getAllNotes()
+    val getAllNotes: LiveData<List<NoteModel>> = repository.getAllNotes()
 
     val isEmptyList = MutableLiveData(false)
 
 
-    fun deleteAllNotes(){
+    fun deleteAllNotes() {
         viewModelScope.launch(Dispatchers.IO) {
-            repositoryImpl.deleteAll()
+            repository.deleteAll()
         }
     }
 
-    fun deleteNote(note: NoteModel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repositoryImpl.deleteNote(note)
-        }
-    }
-
-    fun searchInDatabase(query:String): LiveData<List<NoteModel>> {
-        return repositoryImpl.searchInDatabase(query)
+    fun searchInDatabase(query: String): LiveData<List<NoteModel>> {
+        return repository.searchInDatabase(query)
     }
 
     fun sortByHighPriority(): LiveData<List<NoteModel>> {
-        return repositoryImpl.sortByHighPriority()
+        return repository.sortByHighPriority()
     }
 
     fun sortByLowPriority(): LiveData<List<NoteModel>> {
-        return repositoryImpl.sortByLowPriority()
+        return repository.sortByLowPriority()
     }
 
-    fun addNote(noteModel: NoteModel){
-        viewModelScope.launch(Dispatchers.IO){
-
-            repositoryImpl.insertNote(noteModel = noteModel)
-        }
-
-        Log.d(TAG, "addNote: note")
-
-    }
 }

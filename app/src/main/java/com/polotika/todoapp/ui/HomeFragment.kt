@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -23,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels<HomeViewModel>()
     lateinit var adapter: ListAdapter
     private lateinit var binding: FragmentHomeBinding
 
@@ -76,7 +77,7 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val noteToDelete = adapter.list?.get(viewHolder.adapterPosition)
                 viewModel.deleteNote(noteToDelete!!)
-                restoreDeletedItem(viewHolder.itemView,noteToDelete,viewHolder.adapterPosition)
+                restoreDeletedItem(viewHolder.itemView,noteToDelete!!,viewHolder.adapterPosition)
             }
         }
 
@@ -96,7 +97,6 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
         inflater.inflate(R.menu.home_menu, menu)
         val search = menu.findItem(R.id.menu_search)
         val searchView = search.actionView as SearchView
-        //searchView.isSubmitButtonEnabled = true
         searchView.setOnQueryTextListener(this)
     }
 

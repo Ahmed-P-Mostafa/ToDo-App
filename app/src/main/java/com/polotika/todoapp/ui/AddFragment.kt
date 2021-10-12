@@ -13,8 +13,10 @@ import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentAddBinding
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.viewModel.AddViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class AddFragment : Fragment() {
     private val TAG = "AddFragment"
 
@@ -25,7 +27,7 @@ class AddFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add, container,false)
         val adapter = ArrayAdapter<String>(

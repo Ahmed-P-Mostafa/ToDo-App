@@ -20,7 +20,7 @@ import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentUpdateBinding
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
-import com.polotika.todoapp.viewModel.UpdataViewModel
+import com.polotika.todoapp.viewModel.UpdateViewModel
 import kotlinx.coroutines.flow.collect
 
 
@@ -28,7 +28,7 @@ class UpdateFragment : Fragment() {
 
     val args by navArgs<UpdateFragmentArgs>()
     lateinit var binding: FragmentUpdateBinding
-    val viewModel: UpdataViewModel by viewModels()
+    val viewModel: UpdateViewModel by viewModels()
     val prioritiesList = listOf("Low Priority", "Medium Priority", "High Priority")
 
 
