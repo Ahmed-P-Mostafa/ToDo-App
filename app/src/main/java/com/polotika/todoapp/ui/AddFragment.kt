@@ -7,13 +7,16 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentAddBinding
 import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.viewModel.AddNoteState
 import com.polotika.todoapp.viewModel.AddViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
@@ -30,6 +33,7 @@ class AddFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add, container,false)
+        binding.vm = viewModel
         val adapter = ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_list_item_1,
@@ -53,9 +57,29 @@ class AddFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.addNoteState.collect {
+                when(it){
+                    AddNoteState.CompleteState -> {
+                        Snackbar.make(requireContext(),requireView(), "added successfully", Snackbar.LENGTH_SHORT)
+                            .show()
 
+                        findNavController().navigate(R.id.action_addFragment_to_homeFragment)
+                    }
+                    AddNoteState.EmptyDataState -> {
+                        Snackbar.make(requireContext(),requireView(), "Empty field", Snackbar.LENGTH_SHORT).show()
+
+                    }
+                    AddNoteState.EmptyState ->{
+
+                    }
+                }
+            }
+        }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.add_fragment_menu, menu)
@@ -64,21 +88,7 @@ class AddFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_add -> {
-                if (viewModel.validateUserData(binding.titleEt.text.toString(),binding.descriptionEt.text.toString())) {
-                    val note = NoteModel(
-                        id= 0,
-                        title = binding.titleEt.text.toString(),
-                        description = binding.descriptionEt.text.toString(),
-                        priority = viewModel.getPriority(binding.priorityTv.text.toString())
-                    )
-                    viewModel.addNote(noteModel = note)
-                    Snackbar.make(requireContext(),requireView(), "added successfully", Snackbar.LENGTH_SHORT)
-                        .show()
-
-                    findNavController().navigate(R.id.action_addFragment_to_homeFragment)
-                } else {
-                    Snackbar.make(requireContext(),requireView(), "Empty field", Snackbar.LENGTH_SHORT).show()
-                }
+                viewModel.onAddClicked()
             }
         }
         return super.onOptionsItemSelected(item)
