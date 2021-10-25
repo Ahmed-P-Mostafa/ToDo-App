@@ -52,6 +52,4 @@ class ListAdapter(var list: List<NoteModel>? = emptyList()) :
         this.list = list
         results.dispatchUpdatesTo(this)
     }
-
-
 }

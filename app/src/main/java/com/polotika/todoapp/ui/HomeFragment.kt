@@ -2,7 +2,6 @@ package com.polotika.todoapp.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -10,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -26,8 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
-    private val TAG = "HomeFragment"
-    private val viewModel: HomeViewModel by viewModels<HomeViewModel>()
+    private val viewModel: HomeViewModel by viewModels()
     lateinit var adapter: ListAdapter
     private lateinit var binding: FragmentHomeBinding
 
@@ -87,7 +84,7 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val noteToDelete = adapter.list?.get(viewHolder.adapterPosition)
                 viewModel.deleteNote(noteToDelete!!)
-                restoreDeletedItem(viewHolder.itemView,noteToDelete!!,viewHolder.adapterPosition)
+                restoreDeletedItem(noteToDelete,viewHolder.adapterPosition)
             }
         }
 
@@ -96,10 +93,9 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    private fun restoreDeletedItem(view: View,deletedNote:NoteModel,position: Int){
+    private fun restoreDeletedItem(deletedNote:NoteModel,position: Int){
         Snackbar.make(requireContext(),requireView(),"'${deletedNote.title}' Deleted",Snackbar.LENGTH_LONG).setAction("Undo") {
             viewModel.addNote(deletedNote)
-            adapter.notifyItemChanged(position)
         }.show()
     }
 

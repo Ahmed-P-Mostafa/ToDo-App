@@ -21,11 +21,11 @@ class AddViewModel @Inject constructor(repository: NotesRepository, dispatchers:
     fun onAddClicked(){
         if (title.value !=null && body.value!=null) {
             val note = NoteModel(
-                id= 0,
                 title = title.value.toString(),
                 description = body.value.toString(),
                 priority = getPriorityValue(priority.value.toString())
             )
+
             addNote(noteModel = note)
             addNoteState.value = AddNoteState.CompleteState
 

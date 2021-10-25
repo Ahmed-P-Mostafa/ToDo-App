@@ -24,8 +24,6 @@ import kotlinx.coroutines.flow.collect
 @AndroidEntryPoint
 class UpdateFragment : Fragment() {
 
-    // TODO fix latency in updating note color after update
-
     private val args by navArgs<UpdateFragmentArgs>()
     private lateinit var binding: FragmentUpdateBinding
     private val viewModel: UpdateViewModel by viewModels()
