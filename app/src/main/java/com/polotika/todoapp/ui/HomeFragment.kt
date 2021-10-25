@@ -53,6 +53,7 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        println("HomeFragment: onViewCreated")
         observers()
 
         setFragmentResultListener("add_edit_request"){_,bundle ->
@@ -112,7 +113,6 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     private fun observers() {
 
         viewModel.getAllNotes.observe(requireActivity(), {
-            Log.d(TAG, "observers: ${it[0].priority}")
             when (it.size) {
                 0 -> viewModel.isEmptyList.value = true
                 else -> viewModel.isEmptyList.value = false

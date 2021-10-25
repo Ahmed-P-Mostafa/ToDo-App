@@ -1,5 +1,6 @@
 package com.polotika.todoapp.viewModel
 
+import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.polotika.todoapp.pojo.data.repository.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,15 +21,17 @@ class UpdateViewModel @Inject constructor(
     private val dispatcher: Dispatchers
 ) : BaseViewModel(repository = repository, dispatcher = dispatcher) {
 
-    val id = MutableStateFlow(0)
-    val title = MutableStateFlow("")
-    val body = MutableStateFlow("")
-    val priority = MutableLiveData<String>()
-    val updateFragmentState = MutableStateFlow<UpdateFragmentState>(UpdateFragmentState.EmptyState)
+    private val TAG = "UpdateViewModel"
+    var note = NoteModel()
+    private val title = MutableStateFlow(note.title)
+    private val body = MutableStateFlow(note.description)
+    val updateFragmentState = MutableLiveData<UpdateFragmentState>(UpdateFragmentState.EmptyState)
+
+
 
     fun onUpdateClicked() {
-        if (title.value.isNotBlank() && body.value.isNotBlank()) {
-            val note = collectNote()
+        if (!note.title.isNullOrBlank()&& !note.description.isNullOrBlank()) {
+            //val note = collectNote()
             updateNote(note)
             updateFragmentState.value = UpdateFragmentState.CompleteState
         } else
@@ -37,15 +41,19 @@ class UpdateViewModel @Inject constructor(
     }
 
     fun onDeleteClicked() {
+        Log.d(TAG, "onDeleteClicked: ")
         updateFragmentState.value = UpdateFragmentState.DeleteDialogState
+
     }
 
     fun onConfirmDeleteClicked(){
-        deleteNote(collectNote())
+        deleteNote(note)
         updateFragmentState.value = UpdateFragmentState.ConfirmDeleteState
     }
 
     fun onShareClicked(){
+        title.value = note.title
+        body.value = note.description
         updateFragmentState.value = UpdateFragmentState.ShareNoteState
     }
 
@@ -62,18 +70,10 @@ class UpdateViewModel @Inject constructor(
         return@combine Pair(title, body)
     }
 
-    private fun collectNote():NoteModel{
-        return NoteModel(
-            id = id.value,
-            title = title.value,
-            description = body.value,
-            priority = getPriorityValue(priority.value!!)
-        )
-    }
 
 }
 
-sealed class UpdateFragmentState() {
+ sealed class UpdateFragmentState() {
     object EmptyState : UpdateFragmentState()
     object EmptyDataState : UpdateFragmentState()
     object CompleteState : UpdateFragmentState()

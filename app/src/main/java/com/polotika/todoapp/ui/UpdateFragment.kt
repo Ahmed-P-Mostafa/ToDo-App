@@ -1,7 +1,6 @@
 package com.polotika.todoapp.ui
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -17,7 +16,6 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentUpdateBinding
-import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.viewModel.UpdateFragmentState
 import com.polotika.todoapp.viewModel.UpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,16 +26,17 @@ class UpdateFragment : Fragment() {
 
     // TODO fix latency in updating note color after update
 
-    val args by navArgs<UpdateFragmentArgs>()
-    lateinit var binding: FragmentUpdateBinding
-    val viewModel: UpdateViewModel by viewModels()
-    val prioritiesList = listOf("Low Priority", "Medium Priority", "High Priority")
+    private val args by navArgs<UpdateFragmentArgs>()
+    private lateinit var binding: FragmentUpdateBinding
+    private val viewModel: UpdateViewModel by viewModels()
+    private val prioritiesList = listOf("Low Priority", "Medium Priority", "High Priority")
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        viewModel.note = args.note
 
         binding = DataBindingUtil.inflate(
             LayoutInflater.from(container?.context),
@@ -45,13 +44,11 @@ class UpdateFragment : Fragment() {
             container,
             false
         )
-        binding.note = args.note
-        viewModel.body.value = args.note.description
-        viewModel.title.value = args.note.title
+        binding.note = viewModel.note
+
         setHasOptionsMenu(true)
-        binding.currentTitleEt.setText(args.note.title)
-        binding.currentDescriptionEt.setText(args.note.description)
-        val adapter = ArrayAdapter<String>(
+
+        val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_list_item_1,
             prioritiesList
@@ -64,8 +61,8 @@ class UpdateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.updateFragmentState.collect {
+            viewModel.updateFragmentState.observe(viewLifecycleOwner) {
+                println(it.toString())
                 when (it) {
                     UpdateFragmentState.CompleteState -> {
                         setFragmentResult(
@@ -80,8 +77,7 @@ class UpdateFragment : Fragment() {
                             requireView(),
                             "data incomplete",
                             Snackbar.LENGTH_SHORT
-                        )
-                            .show()
+                        ).show()
                     }
                     UpdateFragmentState.EmptyState -> {
 
@@ -90,8 +86,10 @@ class UpdateFragment : Fragment() {
                         showDeleteDialog()
                     }
                     UpdateFragmentState.ShareNoteState -> {
-                        viewModel.com.collect {
-                            shareNote(it.second, it.first)
+                        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                            viewModel.com.collect { pair ->
+                                shareNote(pair.second!!, pair.first!!)
+                            }
                         }
                     }
                     UpdateFragmentState.ConfirmDeleteState -> {
@@ -103,7 +101,7 @@ class UpdateFragment : Fragment() {
                     }
                 }
             }
-        }
+
     }
 
     override fun onDestroyView() {
@@ -123,11 +121,11 @@ class UpdateFragment : Fragment() {
     private fun showDeleteDialog() {
         AlertDialog.Builder(requireContext()).setTitle("Delete '${args.note.title}' ?")
             .setMessage("Are you sure you want to delete '${args.note.title}' ?")
-            .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+            .setPositiveButton("Yes") { _, _ ->
                 viewModel.onConfirmDeleteClicked()
-            }).setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->
+            }.setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()
-            }).create().show()
+            }.create().show()
     }
 
 

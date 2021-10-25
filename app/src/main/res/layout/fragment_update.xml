@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="text"
-                android:text="@{note.title}"
+                android:text="@={note.title}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="none"
-                onItemClick="@{true}"
+                onItemClick="@{note}"
                 setAppropriateText="@{note.priority}"
                 android:hint="@string/priority_high"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
@@ -70,7 +70,7 @@
                 android:inputType="textMultiLine"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:gravity="top|start"
-                android:text="@{note.description}"
+                android:text="@={note.description}"
                 android:linksClickable="true"
                 android:autoLink="all"
                 />

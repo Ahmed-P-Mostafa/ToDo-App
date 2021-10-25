@@ -6,6 +6,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.polotika.todoapp.R
+import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
 
 val prioritiesList = listOf("Low Priority", "Medium Priority", "High Priority")
@@ -50,7 +51,7 @@ fun setAppropriateText(textView: AutoCompleteTextView,priorityModel: PriorityMod
 }
 
 @BindingAdapter("onItemClick")
-fun onItemClick(textView: AutoCompleteTextView,value:Boolean){
+fun onItemClick(textView: AutoCompleteTextView,note:NoteModel){
     textView.onItemClickListener =
         AdapterView.OnItemClickListener { parent, view, position, id ->
 
@@ -62,6 +63,7 @@ fun onItemClick(textView: AutoCompleteTextView,value:Boolean){
                             R.color.yellow
                         )
                     )
+                    note.priority = PriorityModel.Low
                 }
                 1 -> {
                     textView.setTextColor(
@@ -70,6 +72,8 @@ fun onItemClick(textView: AutoCompleteTextView,value:Boolean){
                             R.color.green
                         )
                     )
+                    note.priority = PriorityModel.Medium
+
                 }
                 2 -> {
                     textView.setTextColor(
@@ -78,6 +82,7 @@ fun onItemClick(textView: AutoCompleteTextView,value:Boolean){
                             R.color.red
                         )
                     )
+                    note.priority = PriorityModel.High
                 }
             }
         }
