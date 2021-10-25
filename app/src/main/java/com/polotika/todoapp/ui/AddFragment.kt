@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -63,10 +65,8 @@ class AddFragment : Fragment() {
             viewModel.addNoteState.collect {
                 when(it){
                     AddNoteState.CompleteState -> {
-                        Snackbar.make(requireContext(),requireView(), "added successfully", Snackbar.LENGTH_SHORT)
-                            .show()
-
-                        findNavController().navigate(R.id.action_addFragment_to_homeFragment)
+                        setFragmentResult("add_edit_request", bundleOf("add_edit_result" to "Added successfully"))
+                        findNavController().popBackStack()
                     }
                     AddNoteState.EmptyDataState -> {
                         Snackbar.make(requireContext(),requireView(), "Empty field", Snackbar.LENGTH_SHORT).show()

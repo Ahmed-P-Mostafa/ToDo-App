@@ -20,7 +20,7 @@ open class BaseViewModel @Inject constructor(
     private val TAG = "SharedViewModel"
 
 
-    fun getPriority(priority: String): PriorityModel {
+    fun getPriorityValue(priority: String): PriorityModel {
         return when (priority) {
             "High Priority" -> PriorityModel.High
             "Medium Priority" -> PriorityModel.Medium

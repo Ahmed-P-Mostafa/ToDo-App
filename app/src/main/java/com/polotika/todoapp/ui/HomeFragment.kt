@@ -2,11 +2,13 @@ package com.polotika.todoapp.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
+    private val TAG = "HomeFragment"
     private val viewModel: HomeViewModel by viewModels<HomeViewModel>()
     lateinit var adapter: ListAdapter
     private lateinit var binding: FragmentHomeBinding
@@ -51,6 +54,12 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         observers()
+
+        setFragmentResultListener("add_edit_request"){_,bundle ->
+           val message = bundle.get("add_edit_result")
+            Snackbar.make(requireContext(),requireView(), message.toString(), Snackbar.LENGTH_SHORT)
+                .show()
+        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -103,6 +112,7 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     private fun observers() {
 
         viewModel.getAllNotes.observe(requireActivity(), {
+            Log.d(TAG, "observers: ${it[0].priority}")
             when (it.size) {
                 0 -> viewModel.isEmptyList.value = true
                 else -> viewModel.isEmptyList.value = false
