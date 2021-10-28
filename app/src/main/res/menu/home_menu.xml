@@ -16,6 +16,9 @@
             app:showAsAction="never">
             <menu>
                 <item
+                    android:id="@+id/menu_date"
+                    android:title="@string/date" />
+                <item
                     android:id="@+id/menu_priority_high"
                     android:title="@string/priority_high" />
                 <item

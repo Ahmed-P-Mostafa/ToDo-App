@@ -18,6 +18,7 @@
     <string name="share">Share</string>
     <string name="share_text">Share your note</string>
     <string name="share_method">Choose sharing method</string>
+    <string name="date">Date</string>
 
     <string-array name="priorities">
         <item>Priority High</item>

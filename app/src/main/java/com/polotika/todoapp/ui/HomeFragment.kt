@@ -24,8 +24,10 @@ import com.polotika.todoapp.pojo.utils.hideKeyboard
 import com.polotika.todoapp.pojo.utils.observeOnce
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.channels.consume
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
@@ -56,17 +58,8 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getSortedNotes()
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            if (!viewModel.savedInstance){
-                viewModel.getAllNotes(viewModel.sortingState.first()).observe(requireActivity()){
-                    adapter.changeData(it)
-                }
-            }
-
-        }
-
-       // observers()
+        Log.d(TAG, "onViewCreated: ${viewModel.savedInstance}")
+        observers()
 
         setFragmentResultListener("add_edit_request"){_,bundle ->
            val message = bundle.get("add_edit_result")
@@ -76,17 +69,20 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+        Log.d(TAG, "onQueryTextSubmit: $query")
+        if (query!=null){
+            searchInDatabase(query)
+        }
+        return true
+    }
+    override fun onQueryTextChange(query: String?): Boolean {
+        Log.d(TAG, "onQueryTextChange: $query")
         if (query!=null){
             searchInDatabase(query)
         }
         return true
     }
 
-    override fun onQueryTextChange(query: String?): Boolean {
-        if (query!=null){
-            searchInDatabase(query)
-        }
-        return true    }
 
     private fun searchInDatabase(query: String){
         viewModel.searchInDatabase("%$query%").observeOnce(viewLifecycleOwner, {
@@ -122,20 +118,15 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     private fun observers() {
-
-        Log.d(TAG, "observers: ")
-        viewModel.notesList.observe(requireActivity(), {
-            Log.d(TAG, "observers: $it")
-            if (it!=null){
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.getAllNotes(viewModel.sortingState.first()).observe(viewLifecycleOwner){
                 when (it.size) {
                     0 -> viewModel.isEmptyList.value = true
                     else -> viewModel.isEmptyList.value = false
-
                 }
                 adapter.changeData(it)
             }
-
-        })
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -144,14 +135,17 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
                 showDeleteAllDialog()
             }
             R.id.menu_priority_low ->{
-                viewModel.onSortClicked(AppConstants.sortByImportanceLow)
-               /* viewModel.sortByLowPriority().observe(viewLifecycleOwner, {
+                viewModel.sortByLowPriority().observe(viewLifecycleOwner){
                     adapter.changeData(it)
-                })*/
-
+                }
             }
             R.id.menu_priority_high ->{
                 viewModel.sortByHighPriority().observe(viewLifecycleOwner, {
+                    adapter.changeData(it)
+                })
+            }
+            R.id.menu_date ->{
+                viewModel.sortByDate().observe(viewLifecycleOwner, {
                     adapter.changeData(it)
                 })
             }

@@ -1,5 +1,6 @@
 package com.polotika.todoapp.pojo.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -12,6 +13,7 @@ import com.polotika.todoapp.pojo.utils.NotesListDiffUtil
 
 class ListAdapter(var list: List<NoteModel>? = emptyList()) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {
+    private val TAG = "ListAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -47,6 +49,7 @@ class ListAdapter(var list: List<NoteModel>? = emptyList()) :
     }
 
     fun changeData(list: List<NoteModel>) {
+        Log.d(TAG, "changeData: ${list.toString()}")
         val diffUtil = NotesListDiffUtil(this.list!!, list)
         val results = DiffUtil.calculateDiff(diffUtil)
         this.list = list

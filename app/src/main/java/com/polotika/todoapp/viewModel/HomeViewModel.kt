@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.repository.NotesRepository
-import com.polotika.todoapp.pojo.data.repository.NotesRepositoryImpl
 import com.polotika.todoapp.pojo.local.AppPreferences
 import com.polotika.todoapp.pojo.utils.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,40 +11,43 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     repository: NotesRepository,
     private val dispatchers: Dispatchers,
-    private val prefs:AppPreferences
+    private val prefs: AppPreferences
 ) : BaseViewModel(dispatchers, repository) {
-
+    private val TAG = "HomeViewModel"
     var savedInstance = false
 
-    var sortingState = flow {
-        emit(prefs.getSortState().first())
+    val sortingState by lazy {
+        flow {
+            emit(prefs.getSortState().first())
+        }
+
     }
 
-    private val TAG = "HomeViewModel"
+    val notesChannel = Channel<List<NoteModel>>()
 
 
-    var notesList =MutableLiveData<List<NoteModel>>()
 
-    fun getAllNotes(sortState:String):LiveData<List<NoteModel>>{
-        savedInstance = true
-       return repository.getAllNotes(sortState)
-        //return notesList
-     // return repository.getAllNotes(sortingState = sortState)
+    var notesList = MutableLiveData<List<NoteModel>>()
+
+    fun getAllNotes(sortState: String): LiveData<List<NoteModel>> {
+        return repository.getAllNotes(sortState)
+
     }
 
-    fun getSortedNotes(sortState:String? = null){
+    fun getSortedNotes(sortState: String? = null) {
         Log.d(TAG, "getSortedNotes: $sortState")
-        if (sortState==null){
+        if (sortState == null) {
             viewModelScope.launch(dispatchers.IO) {
-                notesList.postValue( repository.getAllNotes(sortingState.first()).value )
+                notesList.postValue(repository.getAllNotes(sortingState.first()).value)
             }
-        }else{
+        } else {
             notesList.value = repository.getAllNotes(sortState).value
         }
     }
@@ -64,16 +66,24 @@ class HomeViewModel @Inject constructor(
     }
 
     fun sortByHighPriority(): LiveData<List<NoteModel>> {
+        viewModelScope.launch {
+            prefs.setSortState(AppConstants.sortByImportanceHigh)
+        }
         return repository.getAllNotes(AppConstants.sortByImportanceHigh)
     }
 
     fun sortByLowPriority(): LiveData<List<NoteModel>> {
+        viewModelScope.launch {
+            prefs.setSortState(AppConstants.sortByImportanceLow)
+        }
         return repository.getAllNotes(AppConstants.sortByImportanceLow)
     }
 
-    fun onSortClicked(sortState:String){
-        getSortedNotes(sortState)
-
+    fun sortByDate(): LiveData<List<NoteModel>> {
+        viewModelScope.launch {
+            prefs.setSortState(AppConstants.sortByDate)
+        }
+        return repository.getAllNotes(AppConstants.sortByDate)
     }
 
 }
