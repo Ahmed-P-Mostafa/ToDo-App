@@ -3,6 +3,8 @@ package com.polotika.todoapp.di
 import android.content.Context
 import com.polotika.todoapp.pojo.data.repository.NotesRepository
 import com.polotika.todoapp.pojo.data.repository.NotesRepositoryImpl
+import com.polotika.todoapp.pojo.local.AppPreferences
+import com.polotika.todoapp.pojo.local.AppPreferencesHelper
 import com.polotika.todoapp.pojo.local.NoteDatabase
 import com.polotika.todoapp.pojo.local.NotesDao
 import dagger.Module
@@ -39,6 +41,12 @@ object RepositoryModule {
     @Singleton
     fun provideDispatchers():Dispatchers{
         return Dispatchers
+    }
+
+    @Provides
+    @Singleton
+    fun providesDataStore(@ApplicationContext context: Context):AppPreferences{
+        return AppPreferencesHelper(context = context)
     }
 
 }

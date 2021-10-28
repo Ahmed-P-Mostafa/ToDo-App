@@ -16,11 +16,11 @@ interface NotesDao {
     @Delete
     suspend fun deleteNote(noteModel: NoteModel)
 
-    @Query("select * from notes_table order by id ASC")
-    fun getAllNotes():LiveData<List<NoteModel>>
-
     @Query("delete from notes_table")
     suspend fun deleteAllNotes()
+
+    @Query("select * from notes_table order by id ASC")
+    fun sortByDate():LiveData<List<NoteModel>>
 
     @Query("SELECT * FROM NOTES_TABLE WHERE TITLE LIKE :query")
     fun searchInDatabase(query:String):LiveData<List<NoteModel>>

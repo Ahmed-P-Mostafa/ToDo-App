@@ -2,6 +2,7 @@ package com.polotika.todoapp.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -9,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -17,13 +19,17 @@ import com.polotika.todoapp.databinding.FragmentHomeBinding
 import com.polotika.todoapp.pojo.adapters.ListAdapter
 import com.polotika.todoapp.pojo.adapters.SwipeHelper
 import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.pojo.utils.AppConstants
 import com.polotika.todoapp.pojo.utils.hideKeyboard
 import com.polotika.todoapp.pojo.utils.observeOnce
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
+    private val TAG = "HomeFragment"
     private val viewModel: HomeViewModel by viewModels()
     lateinit var adapter: ListAdapter
     private lateinit var binding: FragmentHomeBinding
@@ -50,8 +56,17 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        println("HomeFragment: onViewCreated")
-        observers()
+        viewModel.getSortedNotes()
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            if (!viewModel.savedInstance){
+                viewModel.getAllNotes(viewModel.sortingState.first()).observe(requireActivity()){
+                    adapter.changeData(it)
+                }
+            }
+
+        }
+
+       // observers()
 
         setFragmentResultListener("add_edit_request"){_,bundle ->
            val message = bundle.get("add_edit_result")
@@ -108,41 +123,52 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
 
     private fun observers() {
 
-        viewModel.getAllNotes.observe(requireActivity(), {
-            when (it.size) {
-                0 -> viewModel.isEmptyList.value = true
-                else -> viewModel.isEmptyList.value = false
+        Log.d(TAG, "observers: ")
+        viewModel.notesList.observe(requireActivity(), {
+            Log.d(TAG, "observers: $it")
+            if (it!=null){
+                when (it.size) {
+                    0 -> viewModel.isEmptyList.value = true
+                    else -> viewModel.isEmptyList.value = false
+
+                }
+                adapter.changeData(it)
             }
-            adapter.changeData(it)
+
         })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_deleteAll -> {
-                showDialog()
+                showDeleteAllDialog()
             }
-            R.id.menu_priority_low ->{ viewModel.sortByLowPriority().observe(viewLifecycleOwner,
-                {
+            R.id.menu_priority_low ->{
+                viewModel.onSortClicked(AppConstants.sortByImportanceLow)
+               /* viewModel.sortByLowPriority().observe(viewLifecycleOwner, {
                     adapter.changeData(it)
-                })}
-            R.id.menu_priority_high ->{ viewModel.sortByHighPriority().observe(viewLifecycleOwner,
-                {
+                })*/
+
+            }
+            R.id.menu_priority_high ->{
+                viewModel.sortByHighPriority().observe(viewLifecycleOwner, {
                     adapter.changeData(it)
-                })}
+                })
+            }
 
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showDialog() {
+    private fun showDeleteAllDialog() {
         AlertDialog.Builder(requireContext()).setTitle("Delete all notes ?")
             .setMessage("Are you sure you want to delete all notes ?")
             .setPositiveButton("Yes") { _, _ ->
                 deleteAllNotes()
             }.setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()
-            }.create().show()
+            }.create()
+        .show()
     }
 
     private fun deleteAllNotes() {

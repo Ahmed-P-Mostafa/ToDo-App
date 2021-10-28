@@ -5,7 +5,7 @@ import com.polotika.todoapp.pojo.data.models.NoteModel
 
 interface NotesRepository {
 
-    fun getAllNotes(): LiveData<List<NoteModel>>
+    fun getAllNotes(sortingState:String): LiveData<List<NoteModel>>
 
     suspend fun insertNote(noteModel: NoteModel)
 
@@ -17,8 +17,11 @@ interface NotesRepository {
 
     fun searchInDatabase(query:String): LiveData<List<NoteModel>>
 
+    fun sortByDate(): LiveData<List<NoteModel>>
+
     fun sortByHighPriority(): LiveData<List<NoteModel>>
 
     fun sortByLowPriority(): LiveData<List<NoteModel>>
+
 
 }
