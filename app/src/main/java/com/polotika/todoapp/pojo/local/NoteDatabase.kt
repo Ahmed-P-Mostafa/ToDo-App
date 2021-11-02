@@ -30,7 +30,8 @@ abstract class NoteDatabase : RoomDatabase() {
                             NoteDatabase::class.java,
                             "Notes_Database"
                         ).fallbackToDestructiveMigration()
-                            .allowMainThreadQueries().build()
+                            .allowMainThreadQueries()
+                            .addCallback(NotesDatabaseCallback()).build()
 
                     }
 

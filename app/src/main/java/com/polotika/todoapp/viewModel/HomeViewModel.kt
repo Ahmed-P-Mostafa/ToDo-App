@@ -23,6 +23,8 @@ class HomeViewModel @Inject constructor(
     private val TAG = "HomeViewModel"
     var savedInstance = false
 
+    //TODO make the viewModel get only the list sorted from repository
+
     val sortingState by lazy {
         flow {
             emit(prefs.getSortState().first())

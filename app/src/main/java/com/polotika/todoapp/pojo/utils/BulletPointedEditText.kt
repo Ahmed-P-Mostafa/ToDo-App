@@ -46,9 +46,6 @@ class BulletPointedEditText(context: Context, attrs: AttributeSet?, defStyleAttr
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
     }
 
-    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        super.setPadding(left, top, right, bottom)
-    }
 
 
 
