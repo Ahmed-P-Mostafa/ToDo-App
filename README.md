@@ -46,6 +46,7 @@ https://user-images.githubusercontent.com/61784191/131763319-0c8f979c-4602-4cdd-
 * MVVM - Design Pattern
 * Kotlin Flow
 * Room Database
+* Data Store
 * Data-Binding
 * Binding Adapters
 * Kotlin Coroutines
