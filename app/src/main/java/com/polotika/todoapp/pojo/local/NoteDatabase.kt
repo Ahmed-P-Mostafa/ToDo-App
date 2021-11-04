@@ -31,7 +31,7 @@ abstract class NoteDatabase : RoomDatabase() {
                             "Notes_Database"
                         ).fallbackToDestructiveMigration()
                             .allowMainThreadQueries()
-                            .addCallback(NotesDatabaseCallback()).build()
+                            .build()
 
                     }
 

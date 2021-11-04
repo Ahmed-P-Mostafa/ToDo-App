@@ -86,6 +86,10 @@ dependencies {
     // Data Store
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
+    //Guide View
+    implementation 'com.github.mreram:showcaseview:1.4.0'
+
+
 
 
 

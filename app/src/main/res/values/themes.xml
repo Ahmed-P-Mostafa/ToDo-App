@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ToDoApp" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="Theme.ToDoApp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/secondaryLightColor</item>
         <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
@@ -15,6 +15,8 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar"> true</item>
         <item name="actionBarTheme">@style/Theme.ToDoApp.ActionBar</item>
+        <item name="actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
+
         <!-- Customize your theme here. -->
     </style>
 
@@ -27,6 +29,9 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="Widget.ActionButton.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:id">@id/overflowActionButton</item>
+    </style>
 
 
 </resources>

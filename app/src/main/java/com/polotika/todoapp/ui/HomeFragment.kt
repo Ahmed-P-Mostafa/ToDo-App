@@ -19,7 +19,6 @@ import com.polotika.todoapp.databinding.FragmentHomeBinding
 import com.polotika.todoapp.pojo.adapters.ListAdapter
 import com.polotika.todoapp.pojo.adapters.SwipeHelper
 import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.utils.AppConstants
 import com.polotika.todoapp.pojo.utils.hideKeyboard
 import com.polotika.todoapp.pojo.utils.observeOnce
 import com.polotika.todoapp.viewModel.HomeViewModel
@@ -28,9 +27,12 @@ import kotlinx.coroutines.channels.consume
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
+import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
+class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallbacks {
     private val TAG = "HomeFragment"
     private val viewModel: HomeViewModel by viewModels()
     lateinit var adapter: ListAdapter
@@ -51,6 +53,8 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
         swipeToDelete(binding.recyclerView)
         setHasOptionsMenu(true)
 
+        ShowCaseTourGuide.setListener(this)
+
 
         hideKeyboard(requireActivity())
 
@@ -60,31 +64,39 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "onViewCreated: ${viewModel.savedInstance}")
         observers()
+        //requireActivity().openOptionsMenu()
 
-        setFragmentResultListener("add_edit_request"){_,bundle ->
-           val message = bundle.get("add_edit_result")
-            Snackbar.make(requireContext(),requireView(), message.toString(), Snackbar.LENGTH_SHORT)
+        setFragmentResultListener("add_edit_request") { _, bundle ->
+            val message = bundle.get("add_edit_result")
+            Snackbar.make(
+                requireContext(),
+                requireView(),
+                message.toString(),
+                Snackbar.LENGTH_SHORT
+            )
                 .show()
         }
+
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         Log.d(TAG, "onQueryTextSubmit: $query")
-        if (query!=null){
+        if (query != null) {
             searchInDatabase(query)
         }
         return true
     }
+
     override fun onQueryTextChange(query: String?): Boolean {
         Log.d(TAG, "onQueryTextChange: $query")
-        if (query!=null){
+        if (query != null) {
             searchInDatabase(query)
         }
         return true
     }
 
 
-    private fun searchInDatabase(query: String){
+    private fun searchInDatabase(query: String) {
         viewModel.searchInDatabase("%$query%").observeOnce(viewLifecycleOwner, {
             adapter.changeData(it)
         })
@@ -95,17 +107,22 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val noteToDelete = adapter.list?.get(viewHolder.adapterPosition)
                 viewModel.deleteNote(noteToDelete!!)
-                restoreDeletedItem(noteToDelete,viewHolder.adapterPosition)
+                restoreDeletedItem(noteToDelete, viewHolder.adapterPosition)
             }
         }
 
 
-        val itemTouchHelper =ItemTouchHelper(swipeToDeleteCallback)
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    private fun restoreDeletedItem(deletedNote:NoteModel,position: Int){
-        Snackbar.make(requireContext(),requireView(),"'${deletedNote.title}' Deleted",Snackbar.LENGTH_LONG).setAction("Undo") {
+    private fun restoreDeletedItem(deletedNote: NoteModel, position: Int) {
+        Snackbar.make(
+            requireContext(),
+            requireView(),
+            "'${deletedNote.title}' Deleted",
+            Snackbar.LENGTH_LONG
+        ).setAction("Undo") {
             viewModel.addNote(deletedNote)
         }.show()
     }
@@ -118,13 +135,34 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     private fun observers() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.getAllNotes(viewModel.sortingState.first()).observe(viewLifecycleOwner){
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.notesChannel.receiveAsFlow().collect {
                 when (it.size) {
                     0 -> viewModel.isEmptyList.value = true
                     else -> viewModel.isEmptyList.value = false
                 }
                 adapter.changeData(it)
+            }
+        }
+
+      /*  viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.getAllNotes(viewModel.sortingState.first()).observe(viewLifecycleOwner) {
+                when (it.size) {
+                    0 -> viewModel.isEmptyList.value = true
+                    else -> viewModel.isEmptyList.value = false
+                }
+                adapter.changeData(it)
+            }
+        }*/
+
+        viewModel.uistate.observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    ShowCaseTourGuide.showCaseSearch(view?.rootView?.findViewById(R.id.menu_search)!!,requireActivity())
+                }
+                false -> {
+
+                }
             }
         }
     }
@@ -134,17 +172,17 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
             R.id.menu_deleteAll -> {
                 showDeleteAllDialog()
             }
-            R.id.menu_priority_low ->{
-                viewModel.sortByLowPriority().observe(viewLifecycleOwner){
+            R.id.menu_priority_low -> {
+                viewModel.sortByLowPriority().observe(viewLifecycleOwner) {
                     adapter.changeData(it)
                 }
             }
-            R.id.menu_priority_high ->{
+            R.id.menu_priority_high -> {
                 viewModel.sortByHighPriority().observe(viewLifecycleOwner, {
                     adapter.changeData(it)
                 })
             }
-            R.id.menu_date ->{
+            R.id.menu_date -> {
                 viewModel.sortByDate().observe(viewLifecycleOwner, {
                     adapter.changeData(it)
                 })
@@ -162,7 +200,7 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
             }.setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()
             }.create()
-        .show()
+            .show()
     }
 
     private fun deleteAllNotes() {
@@ -175,6 +213,22 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
         binding.unbind()
     }
 
+    override fun onNewNoteDoneCallback() {
+        Toast.makeText(requireContext(), "add note done", Toast.LENGTH_SHORT).show()
+    }
 
+    override fun onSwipeDoneCallback() {
+    }
 
+    override fun onDeleteAllDoneCallback() {
+
+    }
+
+    override fun onSearchDoneCallback() {
+        ShowCaseTourGuide.showCaseOverflowMenu(view?.rootView?.findViewById(R.id.overflowActionButton)!!,requireActivity())
+    }
+
+    override fun onOverflowMeuDoneCallback() {
+        ShowCaseTourGuide.showCaseSwipeToDelete(view?.rootView?.findViewById(R.id.menu_deleteAll)!!,requireActivity())
+    }
 }
