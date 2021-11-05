@@ -12,6 +12,47 @@ object ShowCaseTourGuide {
         listener = callbacks
     }
 
+    fun showCaseSearch(view: View, context: Context) {
+        GuideView.Builder(context).setTitle("Search for note")
+            .setContentText("Here you can look up for any note by its title.")
+            .setTargetView(view)
+            .setContentTextSize(12)//optional
+            .setTitleTextSize(14)//optional
+            .setDismissType(DismissType.targetView) //optional - default dismissible by TargetView
+            .setGuideListener {
+                listener?.onSearchDoneCallback()
+            }
+            .build()
+            .show()
+    }
+
+    fun showCaseOverflowMenu(view: View, context: Context) {
+        GuideView.Builder(context).setTitle("other options menu")
+            .setContentText("Click here to expand the menu and show the other options like:\n\'Sorting types\' and \n\'Delete All the notes\'")
+            .setTargetView(view)
+            .setContentTextSize(12)//optional
+            .setTitleTextSize(14)//optional
+            .setDismissType(DismissType.targetView) //optional - default dismissible by TargetView
+            .setGuideListener {
+                listener?.onOverflowMeuDoneCallback()
+            }
+            .build()
+            .show()
+    }
+
+    fun showCaseSwipeToDelete(view: View, context: Context) {
+        GuideView.Builder(context).setTitle("Swipe to delete")
+            .setContentText("Swipe note to left side so you can delete it easily")
+            .setTargetView(view)
+            .setContentTextSize(12)//optional
+            .setTitleTextSize(14)//optional
+            .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
+            .setGuideListener {
+                listener?.onSwipeDoneCallback()
+            }
+            .build()
+            .show()
+    }
 
     fun showCaseNewNoteButton(view: View, context: Context) {
         GuideView.Builder(context).setTitle("New note")
@@ -28,52 +69,11 @@ object ShowCaseTourGuide {
             .show()
 
     }
-
-    fun showCaseSwipeToDelete(view: View, context: Context) {
-        GuideView.Builder(context).setTitle("").setContentText("").setTargetView(view)
-            .setContentTextSize(12)//optional
-            .setTitleTextSize(14)//optional
-            .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
-            .setGuideListener {
-                listener?.onSwipeDoneCallback()
-            }
-            .build()
-            .show()
-    }
-
-    fun showCaseOverflowMenu(view: View, context: Context) {
-        GuideView.Builder(context).setTitle("").setContentText("").setTargetView(view)
-            .setContentTextSize(12)//optional
-            .setTitleTextSize(14)//optional
-            .setDismissType(DismissType.targetView) //optional - default dismissible by TargetView
-            .setGuideListener {
-                listener?.onOverflowMeuDoneCallback()
-            }
-            .build()
-            .show()
-    }
-
-    fun showCaseSearch(view: View, context: Context) {
-        GuideView.Builder(context).setTitle("New note")
-            .setContentText("Click here to navigate for new note page so you can add new note")
-            .setTargetView(view)
-            .setContentTextSize(12)//optional
-            .setTitleTextSize(14)//optional
-            .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
-            .setGuideListener {
-                listener?.onSearchDoneCallback()
-            }
-            .build()
-            .show()
-    }
-
-
 }
 
 interface TourGuideCallbacks {
     fun onNewNoteDoneCallback()
     fun onSwipeDoneCallback()
-    fun onDeleteAllDoneCallback()
     fun onSearchDoneCallback()
     fun onOverflowMeuDoneCallback()
 }

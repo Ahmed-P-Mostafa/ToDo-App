@@ -16,14 +16,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentHomeBinding
-import com.polotika.todoapp.pojo.adapters.ListAdapter
-import com.polotika.todoapp.pojo.adapters.SwipeHelper
+import com.polotika.todoapp.pojo.adapters.*
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.utils.hideKeyboard
 import com.polotika.todoapp.pojo.utils.observeOnce
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.consume
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -203,6 +203,8 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
             .show()
     }
 
+
+
     private fun deleteAllNotes() {
         viewModel.deleteAllNotes()
         Toast.makeText(requireContext(), "deleted successfully", Toast.LENGTH_SHORT).show()
@@ -218,10 +220,13 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
     }
 
     override fun onSwipeDoneCallback() {
-    }
-
-    override fun onDeleteAllDoneCallback() {
-
+        lifecycleScope.launchWhenResumed {
+            delay(1000L)
+            //binding.recyclerView.performSwipeToRight(binding.recyclerView.getChildAt(3),100f)
+            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,200,ItemTouchHelper.START,500)
+            delay(500)
+            //SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,50,ItemTouchHelper.END,1000)
+        }
     }
 
     override fun onSearchDoneCallback() {
@@ -229,6 +234,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
     }
 
     override fun onOverflowMeuDoneCallback() {
-        ShowCaseTourGuide.showCaseSwipeToDelete(view?.rootView?.findViewById(R.id.menu_deleteAll)!!,requireActivity())
+        ShowCaseTourGuide.showCaseSwipeToDelete(binding.recyclerView.getChildAt(3),requireActivity())
     }
 }
