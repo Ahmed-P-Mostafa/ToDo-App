@@ -4,10 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="vm"
             type="com.polotika.todoapp.viewModel.HomeViewModel" />
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
     </data>
 
@@ -15,8 +17,7 @@
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.HomeFragment"
-        >
+        tools:context=".ui.HomeFragment">
 
 
         <androidx.core.widget.NestedScrollView
@@ -27,41 +28,38 @@
             >
 
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:orientation="vertical"
-                  >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                   <TextView
-                       android:id="@+id/header"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       app:layout_constraintStart_toStartOf="parent"
-                       app:layout_constraintTop_toTopOf="parent"
-                       tools:text="This is your to-do list."
-                       android:text="@string/this_is_your_to_do_list"
-                       android:layout_margin="8dp"
-                       android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                       android:textColor="?attr/colorSecondaryVariant"
-                       />
+                <TextView
+                    android:id="@+id/header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="This is your to-do list."
+                    android:text="@string/this_is_your_to_do_list"
+                    android:layout_margin="8dp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textColor="?attr/colorSecondaryVariant" />
 
-                   <androidx.recyclerview.widget.RecyclerView
-                       android:id="@+id/recyclerView"
-                       android:layout_width="match_parent"
-                       android:layout_height="match_parent"
-                       android:layout_marginBottom="16dp"
-                       tools:itemCount="5"
-                       tools:layout_editor_absoluteX="-153dp"
-                       tools:layout_editor_absoluteY="-16dp"
-                       tools:listitem="@layout/note_item"
-                       android:orientation="vertical"
-                       app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                       app:spanCount="2"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="16dp"
+                    tools:itemCount="5"
+                    tools:layout_editor_absoluteX="-153dp"
+                    tools:layout_editor_absoluteY="-16dp"
+                    tools:listitem="@layout/note_item"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    app:spanCount="2" />
 
-               </LinearLayout>
+            </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

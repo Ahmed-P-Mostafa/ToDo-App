@@ -2,7 +2,6 @@ package com.polotika.todoapp.pojo.adapters
 
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.polotika.todoapp.R

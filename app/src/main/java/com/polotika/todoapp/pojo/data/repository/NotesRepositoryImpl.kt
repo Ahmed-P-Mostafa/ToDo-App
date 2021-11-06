@@ -1,10 +1,10 @@
 package com.polotika.todoapp.pojo.data.repository
 
 import android.util.Log
-import com.polotika.todoapp.pojo.utils.AppConstants
 import androidx.lifecycle.LiveData
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.local.NotesDao
+import com.polotika.todoapp.pojo.utils.AppConstants
 import javax.inject.Inject
 
 class NotesRepositoryImpl @Inject constructor(private val notesDao: NotesDao) :NotesRepository {

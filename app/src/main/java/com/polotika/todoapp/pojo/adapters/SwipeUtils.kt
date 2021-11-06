@@ -1,13 +1,13 @@
 package com.polotika.todoapp.pojo.adapters
 
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import android.animation.ValueAnimator
 import android.os.SystemClock
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 
 
 abstract class SwipeHelper :ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.START) {

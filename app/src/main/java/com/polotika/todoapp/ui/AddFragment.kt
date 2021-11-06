@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentAddBinding
-import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.viewModel.AddNoteState
 import com.polotika.todoapp.viewModel.AddViewModel
 import dagger.hilt.android.AndroidEntryPoint

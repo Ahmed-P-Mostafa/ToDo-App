@@ -16,20 +16,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentHomeBinding
-import com.polotika.todoapp.pojo.adapters.*
+import com.polotika.todoapp.pojo.adapters.ListAdapter
+import com.polotika.todoapp.pojo.adapters.SwipeHelper
+import com.polotika.todoapp.pojo.adapters.SwipeUtils
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.utils.hideKeyboard
 import com.polotika.todoapp.pojo.utils.observeOnce
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.channels.consume
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
-import smartdevelop.ir.eram.showcaseviewlib.GuideView
-import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
-import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallbacks {

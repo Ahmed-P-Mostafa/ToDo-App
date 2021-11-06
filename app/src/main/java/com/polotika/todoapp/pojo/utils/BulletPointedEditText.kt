@@ -1,13 +1,10 @@
 package com.polotika.todoapp.pojo.utils
 
-import com.google.android.material.textfield.TextInputEditText
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
-
 import android.R
 import android.content.Context
-
 import android.graphics.Typeface
 import android.util.AttributeSet
+import com.google.android.material.textfield.TextInputEditText
 
 class BulletPointedEditText(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     TextInputEditText(context, attrs, defStyleAttr) {

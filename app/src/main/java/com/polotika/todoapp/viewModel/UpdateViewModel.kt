@@ -1,16 +1,13 @@
 package com.polotika.todoapp.viewModel
 
 import android.util.Log
-import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.repository.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
