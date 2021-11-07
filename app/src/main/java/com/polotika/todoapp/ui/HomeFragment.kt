@@ -219,10 +219,9 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
     override fun onSwipeDoneCallback() {
         lifecycleScope.launchWhenResumed {
             delay(1000L)
-            //binding.recyclerView.performSwipeToRight(binding.recyclerView.getChildAt(3),100f)
             SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,200,ItemTouchHelper.START,500)
             delay(500)
-            //SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,50,ItemTouchHelper.END,1000)
+            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,50,ItemTouchHelper.END,1500)
         }
     }
 
