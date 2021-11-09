@@ -18,7 +18,7 @@ object ShowCaseTourGuide {
             .setTargetView(view)
             .setContentTextSize(12)//optional
             .setTitleTextSize(14)//optional
-            .setDismissType(DismissType.targetView) //optional - default dismissible by TargetView
+            .setDismissType(DismissType.selfView) //optional - default dismissible by TargetView
             .setGuideListener {
                 listener?.onSearchDoneCallback()
             }
@@ -34,7 +34,7 @@ object ShowCaseTourGuide {
             .setTitleTextSize(14)//optional
             .setDismissType(DismissType.targetView) //optional - default dismissible by TargetView
             .setGuideListener {
-                listener?.onOverflowMeuDoneCallback()
+               // listener?.onOverflowMeuDoneCallback()
             }
             .build()
             .show()
@@ -46,7 +46,7 @@ object ShowCaseTourGuide {
             .setTargetView(view)
             .setContentTextSize(12)//optional
             .setTitleTextSize(14)//optional
-            .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
+            .setDismissType(DismissType.selfView) //optional - default dismissible by TargetView
             .setGuideListener {
                 listener?.onSwipeDoneCallback()
             }
@@ -55,13 +55,14 @@ object ShowCaseTourGuide {
     }
 
     fun showCaseNewNoteButton(view: View, context: Context) {
+        // ToDo make it target view before production
         GuideView.Builder(context).setTitle("New note")
             .setContentText("Click here to navigate for new note page so you can add new note")
             .setTargetView(view)
             .setContentTextSize(12)//optional
             .setTitleTextSize(14)//optional
             .setGravity(Gravity.auto)
-            .setDismissType(DismissType.targetView) //optional - default dismissible by TargetView
+            .setDismissType(DismissType.selfView) //optional - default dismissible by TargetView
             .setGuideListener {
                 listener?.onNewNoteDoneCallback()
             }
@@ -75,5 +76,5 @@ interface TourGuideCallbacks {
     fun onNewNoteDoneCallback()
     fun onSwipeDoneCallback()
     fun onSearchDoneCallback()
-    fun onOverflowMeuDoneCallback()
+    //fun onOverflowMeuDoneCallback()
 }

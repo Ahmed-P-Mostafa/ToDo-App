@@ -29,21 +29,19 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch(dispatchers.IO) {
             if( d.await() ){
-                val list = mutableListOf<NoteModel>()
-                list.add(NoteModel(title = "Tasks",description = "Learn new thins\nDesign Things\nShare my work\nStay hydrated",priority = PriorityModel.High))
-                list.add(NoteModel(title = "Groceries",description = "Cat food\nTomatoes\nTuna\nMilk",priority = PriorityModel.Low))
-                list.add(NoteModel(title = "Travel",description = "Canada\nParis\nItaly\nSwitzerland",priority = PriorityModel.Low))
-                list.add(NoteModel(title = "Reminder",description = "Feed the cat\nWater the plants\nGo to gym\nFinish last chapter",priority = PriorityModel.High))
-                list.add(NoteModel(title = "Interview questions",description = "Ask for team size\nIf any senior in the team ask for his name to search for it on linked in\nHow many days in the week and working hours",priority = PriorityModel.High))
-                notesChannel.send(list)
-                uistate.postValue( true)
+                addNote(NoteModel(title = "Tasks",description = "Learn new thins\nDesign Things\nShare my work\nStay hydrated",priority = PriorityModel.High))
+                addNote(NoteModel(title = "Groceries",description = "Cat food\nTomatoes\nTuna\nMilk",priority = PriorityModel.Low))
+                addNote(NoteModel(title = "Travel",description = "Canada\nParis\nItaly\nSwitzerland",priority = PriorityModel.Low))
+                addNote(NoteModel(title = "Reminder",description = "Feed the cat\nWater the plants\nGo to gym\nFinish last chapter",priority = PriorityModel.High))
+                addNote(NoteModel(title = "Interview questions",description = "Ask for team size\nIf any senior in the team ask for his name to search for it on linked in\nHow many days in the week and working hours",priority = PriorityModel.High))
+                isTourGuideUiState.postValue( true)
             }else{
-                uistate.postValue(false)
+                isTourGuideUiState.postValue(false)
             }
         }
     }
 
-    val uistate = MutableLiveData<Boolean>()
+    val isTourGuideUiState = MutableLiveData<Boolean>()
     //TODO make the viewModel get only the list sorted from repository
 
     val sortingState by lazy {
@@ -108,6 +106,12 @@ class HomeViewModel @Inject constructor(
             prefs.setSortState(AppConstants.sortByDate)
         }
         return repository.getAllNotes(AppConstants.sortByDate)
+    }
+
+    fun showCaseTourGuideFinished() {
+        viewModelScope.launch(dispatchers.IO) {
+            prefs.setAppTourState(false)
+        }
     }
 
 }

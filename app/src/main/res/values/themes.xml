@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ToDoApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.ToDoApp" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/secondaryLightColor</item>
         <item name="colorPrimaryVariant">@color/primaryDarkColor</item>

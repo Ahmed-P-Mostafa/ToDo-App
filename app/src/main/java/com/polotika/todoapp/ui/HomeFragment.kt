@@ -152,7 +152,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
             }
         }*/
 
-        viewModel.uistate.observe(viewLifecycleOwner) {
+        viewModel.isTourGuideUiState.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
                     ShowCaseTourGuide.showCaseSearch(view?.rootView?.findViewById(R.id.menu_search)!!,requireActivity())
@@ -212,24 +212,35 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
         binding.unbind()
     }
 
-    override fun onNewNoteDoneCallback() {
-        Toast.makeText(requireContext(), "add note done", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onSwipeDoneCallback() {
+    override fun onSearchDoneCallback() {
+        ShowCaseTourGuide.showCaseSwipeToDelete(binding.recyclerView.getChildAt(0),requireActivity())
         lifecycleScope.launchWhenResumed {
             delay(1000L)
-            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,200,ItemTouchHelper.START,500)
-            delay(500)
-            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,50,ItemTouchHelper.END,1500)
+            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,300,ItemTouchHelper.START,500)
+            delay(1000)
+            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,300,ItemTouchHelper.END,500)
         }
     }
 
-    override fun onSearchDoneCallback() {
-        ShowCaseTourGuide.showCaseOverflowMenu(view?.rootView?.findViewById(R.id.overflowActionButton)!!,requireActivity())
+    override fun onNewNoteDoneCallback() {
+        Toast.makeText(requireContext(), "add note done", Toast.LENGTH_SHORT).show()
+        viewModel.showCaseTourGuideFinished()
     }
 
-    override fun onOverflowMeuDoneCallback() {
-        ShowCaseTourGuide.showCaseSwipeToDelete(binding.recyclerView.getChildAt(3),requireActivity())
+    override fun onSwipeDoneCallback() {
+  /*      lifecycleScope.launchWhenResumed {
+            delay(1000L)
+            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,adapter.list?.lastIndex?:0,200,ItemTouchHelper.START,500)
+            delay(500)
+            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,adapter.list?.lastIndex?:0,50,ItemTouchHelper.END,1500)
+
+            ShowCaseTourGuide.showCaseNewNoteButton(binding.fabAdd,requireActivity())
+
+        }*/
+
+        ShowCaseTourGuide.showCaseNewNoteButton(binding.fabAdd,requireActivity())
+
     }
+
+
 }
