@@ -26,8 +26,8 @@ interface NotesDao {
     fun searchInDatabase(query:String):LiveData<List<NoteModel>>
 
     @Query("select * from notes_table order by case when priority like 'H%' then 1 when priority like 'M%' then 2 when priority like 'L%' then 3 end ")
-    fun sortByHighPriority():LiveData<List<NoteModel>>
+    fun sortByHighPriority():List<NoteModel>
 
     @Query("select * from notes_table order by case when priority like 'L%' then 1 when priority like 'M%' then 2 when priority like 'H%' then 3 end ")
-    fun sortByLowPriority():LiveData<List<NoteModel>>
+    fun sortByLowPriority():List<NoteModel>
 }

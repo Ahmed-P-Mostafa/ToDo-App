@@ -8,19 +8,20 @@ import com.polotika.todoapp.pojo.utils.AppConstants
 import javax.inject.Inject
 
 class NotesRepositoryImpl @Inject constructor(private val notesDao: NotesDao) :NotesRepository {
-    override fun getAllNotes(sortingState:String):LiveData<List<NoteModel>> {
+
+    override fun getAllNotes(sortingState:String):LiveData<List<NoteModel>>{
         Log.d("TAG", "getAllNotes: $sortingState")
 
         return when(sortingState){
             AppConstants.sortByDate ->{
                 sortByDate()
             }
-            AppConstants.sortByImportanceLow -> {
+          /*  AppConstants.sortByImportanceLow -> {
                 sortByLowPriority()
             }
             AppConstants.sortByImportanceHigh -> {
                sortByHighPriority()
-            }
+            }*/
             else -> {
                 notesDao.sortByDate()
             }
@@ -52,11 +53,11 @@ class NotesRepositoryImpl @Inject constructor(private val notesDao: NotesDao) :N
         return notesDao.sortByDate()
     }
 
-    override fun sortByHighPriority():LiveData<List<NoteModel>>{
+    override fun sortByHighPriority():List<NoteModel>{
         return notesDao.sortByHighPriority()
     }
 
-    override fun sortByLowPriority():LiveData<List<NoteModel>>{
+    override fun sortByLowPriority():List<NoteModel>{
         return notesDao.sortByLowPriority()
     }
 }

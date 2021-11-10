@@ -17,11 +17,11 @@ interface NotesRepository {
 
     fun searchInDatabase(query:String): LiveData<List<NoteModel>>
 
-    fun sortByDate(): LiveData<List<NoteModel>>
+    fun sortByDate():LiveData<List<NoteModel>>
 
-    fun sortByHighPriority(): LiveData<List<NoteModel>>
+    fun sortByHighPriority(): List<NoteModel>
 
-    fun sortByLowPriority(): LiveData<List<NoteModel>>
+    fun sortByLowPriority(): List<NoteModel>
 
 
 }

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +26,6 @@ import com.polotika.todoapp.pojo.utils.observeOnce
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallbacks {
@@ -39,29 +38,23 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         binding.lifecycleOwner = this
         binding.vm = viewModel
-
         adapter = ListAdapter()
         binding.recyclerView.adapter = adapter
+
         swipeToDelete(binding.recyclerView)
         setHasOptionsMenu(true)
 
         ShowCaseTourGuide.setListener(this)
-
-
         hideKeyboard(requireActivity())
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "onViewCreated: ${viewModel.savedInstance}")
         observers()
-        //requireActivity().openOptionsMenu()
 
         setFragmentResultListener("add_edit_request") { _, bundle ->
             val message = bundle.get("add_edit_result")
@@ -86,8 +79,9 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
 
     override fun onQueryTextChange(query: String?): Boolean {
         Log.d(TAG, "onQueryTextChange: $query")
-        if (query != null) {
+        if (!query.isNullOrBlank()) {
             searchInDatabase(query)
+        }else{
         }
         return true
     }
@@ -104,7 +98,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val noteToDelete = adapter.list?.get(viewHolder.adapterPosition)
                 viewModel.deleteNote(noteToDelete!!)
-                restoreDeletedItem(noteToDelete, viewHolder.adapterPosition)
+                restoreDeletedItem(noteToDelete)
             }
         }
 
@@ -113,7 +107,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    private fun restoreDeletedItem(deletedNote: NoteModel, position: Int) {
+    private fun restoreDeletedItem(deletedNote: NoteModel) {
         Snackbar.make(
             requireContext(),
             requireView(),
@@ -132,26 +126,10 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
     }
 
     private fun observers() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.notesChannel.receiveAsFlow().collect {
-                when (it.size) {
-                    0 -> viewModel.isEmptyList.value = true
-                    else -> viewModel.isEmptyList.value = false
-                }
-                adapter.changeData(it)
-            }
+
+        viewModel.notesList.observe(requireActivity()){ notes ->
+            adapter.changeData(notes)
         }
-
-      /*  viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.getAllNotes(viewModel.sortingState.first()).observe(viewLifecycleOwner) {
-                when (it.size) {
-                    0 -> viewModel.isEmptyList.value = true
-                    else -> viewModel.isEmptyList.value = false
-                }
-                adapter.changeData(it)
-            }
-        }*/
-
         viewModel.isTourGuideUiState.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
@@ -170,19 +148,13 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
                 showDeleteAllDialog()
             }
             R.id.menu_priority_low -> {
-                viewModel.sortByLowPriority().observe(viewLifecycleOwner) {
-                    adapter.changeData(it)
-                }
+                viewModel.sortByLowPriority()
             }
             R.id.menu_priority_high -> {
-                viewModel.sortByHighPriority().observe(viewLifecycleOwner, {
-                    adapter.changeData(it)
-                })
+                viewModel.sortByHighPriority()
             }
             R.id.menu_date -> {
-                viewModel.sortByDate().observe(viewLifecycleOwner, {
-                    adapter.changeData(it)
-                })
+                viewModel.sortByDate()
             }
 
         }
@@ -199,8 +171,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
             }.create()
             .show()
     }
-
-
 
     private fun deleteAllNotes() {
         viewModel.deleteAllNotes()
@@ -223,24 +193,13 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
     }
 
     override fun onNewNoteDoneCallback() {
-        Toast.makeText(requireContext(), "add note done", Toast.LENGTH_SHORT).show()
         viewModel.showCaseTourGuideFinished()
     }
 
     override fun onSwipeDoneCallback() {
-  /*      lifecycleScope.launchWhenResumed {
-            delay(1000L)
-            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,adapter.list?.lastIndex?:0,200,ItemTouchHelper.START,500)
-            delay(500)
-            SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,adapter.list?.lastIndex?:0,50,ItemTouchHelper.END,1500)
-
-            ShowCaseTourGuide.showCaseNewNoteButton(binding.fabAdd,requireActivity())
-
-        }*/
-
         ShowCaseTourGuide.showCaseNewNoteButton(binding.fabAdd,requireActivity())
-
     }
+
 
 
 }
