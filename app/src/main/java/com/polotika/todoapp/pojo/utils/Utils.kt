@@ -3,6 +3,7 @@ package com.polotika.todoapp.pojo.utils
 import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -21,6 +22,19 @@ fun <T>LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner,observer: Observer
         override fun onChanged(t: T) {
             observer.onChanged(t)
             removeObserver(this)
+        }
+    })
+}
+
+inline fun SearchView.onQueryTextChanged(crossinline listener: (String) -> Unit) {
+    this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return true
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            listener(newText.orEmpty())
+            return true
         }
     })
 }

@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -23,12 +22,13 @@ import com.polotika.todoapp.pojo.adapters.SwipeUtils
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.utils.hideKeyboard
 import com.polotika.todoapp.pojo.utils.observeOnce
+import com.polotika.todoapp.pojo.utils.onQueryTextChanged
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallbacks {
+class HomeFragment : Fragment() ,  TourGuideCallbacks {
     private val TAG = "HomeFragment"
     private val viewModel: HomeViewModel by viewModels()
     lateinit var adapter: ListAdapter
@@ -45,7 +45,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
         adapter = ListAdapter()
         binding.recyclerView.adapter = adapter
 
-        swipeToDelete(binding.recyclerView)
+        swipeToDelete()
         setHasOptionsMenu(true)
 
         ShowCaseTourGuide.setListener(this)
@@ -55,6 +55,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         observers()
+        viewModel.getAllNotesSorted()
 
         setFragmentResultListener("add_edit_request") { _, bundle ->
             val message = bundle.get("add_edit_result")
@@ -69,6 +70,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
 
     }
 
+/*
     override fun onQueryTextSubmit(query: String?): Boolean {
         Log.d(TAG, "onQueryTextSubmit: $query")
         if (query != null) {
@@ -79,21 +81,23 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
 
     override fun onQueryTextChange(query: String?): Boolean {
         Log.d(TAG, "onQueryTextChange: $query")
-        if (!query.isNullOrBlank()) {
+        if (query !=null) {
             searchInDatabase(query)
-        }else{
         }
         return true
     }
+*/
 
 
     private fun searchInDatabase(query: String) {
-        viewModel.searchInDatabase("%$query%").observeOnce(viewLifecycleOwner, {
-            adapter.changeData(it)
-        })
+        Log.d(TAG, "searchInDatabase: $query")
+        viewModel.searchInDatabase("%$query%").observeOnce(viewLifecycleOwner){
+            //adapter.changeData(it)
+            viewModel.notesList.value = it
+        }
     }
 
-    private fun swipeToDelete(recyclerView: RecyclerView) {
+    private fun swipeToDelete() {
         val swipeToDeleteCallback = object : SwipeHelper() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val noteToDelete = adapter.list?.get(viewHolder.adapterPosition)
@@ -104,7 +108,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
 
 
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
     private fun restoreDeletedItem(deletedNote: NoteModel) {
@@ -122,14 +126,25 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener, TourGuideCallba
         inflater.inflate(R.menu.home_menu, menu)
         val search = menu.findItem(R.id.menu_search)
         val searchView = search.actionView as SearchView
-        searchView.setOnQueryTextListener(this)
+        searchView.onQueryTextChanged{
+            searchInDatabase(it)
+        }
     }
 
     private fun observers() {
 
-        viewModel.notesList.observe(requireActivity()){ notes ->
-            adapter.changeData(notes)
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.notesList.observe(viewLifecycleOwner){ notes ->
+                if (notes!=null){
+                    when(notes.size){
+                        0-> viewModel.isEmptyList.value = true
+                        else -> viewModel.isEmptyList.value = false
+                    }
+                    adapter.changeData(notes)
+                }
+            }
         }
+
         viewModel.isTourGuideUiState.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {

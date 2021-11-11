@@ -2,6 +2,7 @@ package com.polotika.todoapp.pojo.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.local.NotesDao
 import com.polotika.todoapp.pojo.utils.AppConstants
@@ -10,23 +11,20 @@ import javax.inject.Inject
 class NotesRepositoryImpl @Inject constructor(private val notesDao: NotesDao) :NotesRepository {
 
     override fun getAllNotes(sortingState:String):LiveData<List<NoteModel>>{
-        Log.d("TAG", "getAllNotes: $sortingState")
-
         return when(sortingState){
             AppConstants.sortByDate ->{
-                sortByDate()
+                MutableLiveData(sortByDate())
             }
-          /*  AppConstants.sortByImportanceLow -> {
-                sortByLowPriority()
+            AppConstants.sortByImportanceLow -> {
+                MutableLiveData(sortByLowPriority())
             }
             AppConstants.sortByImportanceHigh -> {
-               sortByHighPriority()
-            }*/
+               MutableLiveData(sortByHighPriority())
+            }
             else -> {
-                notesDao.sortByDate()
+                MutableLiveData(sortByDate())
             }
         }
-
     }
 
     override suspend fun insertNote(noteModel: NoteModel){
@@ -45,11 +43,17 @@ class NotesRepositoryImpl @Inject constructor(private val notesDao: NotesDao) :N
         notesDao.deleteAllNotes()
     }
 
-    override fun searchInDatabase(query:String):LiveData<List<NoteModel>>{
-        return notesDao.searchInDatabase(query = query)
+    override fun searchInDatabase(query:String,sortingState: String):LiveData<List<NoteModel>>{
+
+       return when(sortingState){
+            AppConstants.sortByDate -> notesDao.searchInDatabaseWhereSortByDate(query = query)
+           AppConstants.sortByImportanceHigh ->notesDao.searchInDatabaseWherePriorityHigh(query)
+           AppConstants.sortByImportanceLow ->notesDao.searchInDatabaseWherePriorityLow(query)
+           else -> notesDao.searchInDatabaseWhereSortByDate(query)
+       }
     }
 
-    override fun sortByDate(): LiveData<List<NoteModel>> {
+    override fun sortByDate(): List<NoteModel> {
         return notesDao.sortByDate()
     }
 

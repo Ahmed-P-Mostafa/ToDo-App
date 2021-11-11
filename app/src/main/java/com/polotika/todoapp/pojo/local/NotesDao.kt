@@ -20,10 +20,16 @@ interface NotesDao {
     suspend fun deleteAllNotes()
 
     @Query("select * from notes_table order by id ASC")
-    fun sortByDate():LiveData<List<NoteModel>>
+    fun sortByDate():List<NoteModel>
 
-    @Query("SELECT * FROM NOTES_TABLE WHERE TITLE LIKE :query")
-    fun searchInDatabase(query:String):LiveData<List<NoteModel>>
+    @Query("SELECT * FROM NOTES_TABLE WHERE TITLE LIKE :query order by case when priority like 'H%' then 1 when priority like 'M%' then 2 when priority like 'L%' then 3 end ")
+    fun searchInDatabaseWherePriorityHigh(query:String):LiveData<List<NoteModel>>
+
+    @Query("SELECT * FROM NOTES_TABLE WHERE TITLE LIKE :query order by case when priority like 'L%' then 1 when priority like 'M%' then 2 when priority like 'H%' then 3 end ")
+    fun searchInDatabaseWherePriorityLow(query:String):LiveData<List<NoteModel>>
+
+    @Query("SELECT * FROM NOTES_TABLE WHERE TITLE LIKE :query order by id ASC")
+    fun searchInDatabaseWhereSortByDate(query:String):LiveData<List<NoteModel>>
 
     @Query("select * from notes_table order by case when priority like 'H%' then 1 when priority like 'M%' then 2 when priority like 'L%' then 3 end ")
     fun sortByHighPriority():List<NoteModel>

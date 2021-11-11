@@ -15,9 +15,9 @@ interface NotesRepository {
 
     suspend fun deleteAll()
 
-    fun searchInDatabase(query:String): LiveData<List<NoteModel>>
+    fun searchInDatabase(query:String,sortingState: String): LiveData<List<NoteModel>>
 
-    fun sortByDate():LiveData<List<NoteModel>>
+    fun sortByDate():List<NoteModel>
 
     fun sortByHighPriority(): List<NoteModel>
 
