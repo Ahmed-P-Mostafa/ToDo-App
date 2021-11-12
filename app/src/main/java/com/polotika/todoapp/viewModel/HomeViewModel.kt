@@ -87,7 +87,6 @@ class HomeViewModel @Inject constructor(
             }
             notesList.postValue( repository.getAllNotes(sortingState).value)
 
-
         } else {
             val newList = repository.getAllNotes(sortingValue).value
             notesList.value = newList?: emptyList()
@@ -103,10 +102,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
     val isTourGuideUiState = MutableLiveData<Boolean>()
     //TODO make the viewModel get only the list sorted from repository
-
 
     val isEmptyList = MutableLiveData(false)
 
