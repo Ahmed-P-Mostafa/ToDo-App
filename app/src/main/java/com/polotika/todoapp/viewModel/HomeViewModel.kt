@@ -21,7 +21,17 @@ class HomeViewModel @Inject constructor(
     var notesList = MutableLiveData<List<NoteModel>>()
     private var sortingState: String = AppConstants.sortByDate
     private val sortFlow = MutableStateFlow(sortingState)
-    private val searchFlow : Flow<String> = flowOf()
+    private val searchFlow = MutableStateFlow<String>("")
+
+    var sortingFlow :MutableStateFlow<String>
+        get() {
+            return prefs.getSortState() as MutableStateFlow<String>
+        }
+        set(value) {
+            viewModelScope.launch {
+                prefs.setSortState(value.first())
+            }
+        }
 
     init {
 
@@ -83,9 +93,9 @@ class HomeViewModel @Inject constructor(
             viewModelScope.launch {
                 prefs.getSortState().collect {
                     sortingState = it
+                    notesList.postValue( repository.getAllNotes(it).value)
                 }
             }
-            notesList.postValue( repository.getAllNotes(sortingState).value)
 
         } else {
             val newList = repository.getAllNotes(sortingValue).value
@@ -93,13 +103,18 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val sortedNotesList = combine(sortFlow,searchFlow){ sort, search ->
-        if (search!=null&& search.isNotEmpty()){
-            searchInDatabase(query = search)
+    val sortedNotesList :Flow<List<NoteModel>> = combine(sortFlow,searchFlow){ sort, search ->
+
+        var sortedlist :List<NoteModel> = emptyList()
+         if (search!=null&& search.isNotEmpty()){
+             sortedlist =  searchInDatabase(query = search).value?: emptyList()
         }
-        if (!sort.equals(sortingState)){
-            getAllNotesSorted(sort)
+        if (sort != sortingFlow.asLiveData().value){
+           sortedlist =  repository.getAllNotes(sort).value?: emptyList()
+            sortingFlow.emit(sort)
         }
+
+        return@combine sortedlist
     }
 
     val isTourGuideUiState = MutableLiveData<Boolean>()
@@ -121,7 +136,7 @@ class HomeViewModel @Inject constructor(
 
     private fun changeNotesSortingType(newSort: String) {
         viewModelScope.launch(dispatchers.IO) {
-            repository.getAllNotes(newSort)
+            notesList.postValue(repository.getAllNotes(newSort).value)
             prefs.setSortState(newSort)
         }
     }
