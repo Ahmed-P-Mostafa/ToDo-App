@@ -1,18 +1,24 @@
 package com.polotika.todoapp.viewModel
 
+import android.content.Context
 import androidx.lifecycle.*
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
 import com.polotika.todoapp.pojo.data.repository.NotesRepository
 import com.polotika.todoapp.pojo.local.AppPreferences
 import com.polotika.todoapp.pojo.utils.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     repository: NotesRepository,
     private val dispatchers: Dispatchers,
     private val prefs: AppPreferences
@@ -156,6 +162,24 @@ class HomeViewModel @Inject constructor(
     fun showCaseTourGuideFinished() {
         viewModelScope.launch(dispatchers.IO) {
             prefs.setAppTourState(false)
+        }
+    }
+
+    private fun checkForAppUpdates(){
+        val appUpdateManager = AppUpdateManagerFactory.create(context)
+
+// Returns an intent object that you use to check for an update.
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+// Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                // This example applies an immediate update. To apply a flexible update
+                // instead, pass in AppUpdateType.FLEXIBLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+            ) {
+                // Request the update.
+            }
         }
     }
 
