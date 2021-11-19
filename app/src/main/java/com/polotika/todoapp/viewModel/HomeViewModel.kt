@@ -5,6 +5,8 @@ import androidx.lifecycle.*
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.ktx.AppUpdateResult
+import com.google.android.play.core.ktx.requestUpdateFlow
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
 import com.polotika.todoapp.pojo.data.repository.NotesRepository
@@ -167,6 +169,21 @@ class HomeViewModel @Inject constructor(
 
     private fun checkForAppUpdates(){
         val appUpdateManager = AppUpdateManagerFactory.create(context)
+        viewModelScope.launch {
+            appUpdateManager.requestUpdateFlow().collect { updateResult->
+                when(updateResult){
+                    is AppUpdateResult.Available ->{
+
+                    }
+                    is AppUpdateResult.InProgress ->{
+
+                    }
+                    is AppUpdateResult.Downloaded ->{
+
+                    }
+                }
+            }
+        }
 
 // Returns an intent object that you use to check for an update.
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
