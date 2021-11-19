@@ -50,6 +50,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
 
         ShowCaseTourGuide.setListener(this)
         hideKeyboard(requireActivity())
+        viewModel.getToken()
         return binding.root
     }
 

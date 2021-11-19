@@ -4,6 +4,8 @@ package com.polotika.todoapp.pojo.utils
 object AppConstants {
 
 
+    const val NotificationChannelId = "todo app notification channel id"
+
     //Shared Preferences constants
     //TODO remove value before commit
     const val preferencesName = "preferences_data_store"

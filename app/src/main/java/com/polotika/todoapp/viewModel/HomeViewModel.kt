@@ -1,12 +1,15 @@
 package com.polotika.todoapp.viewModel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.*
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.AppUpdateResult
 import com.google.android.play.core.ktx.requestUpdateFlow
+import com.google.firebase.messaging.FirebaseMessaging
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
 import com.polotika.todoapp.pojo.data.repository.NotesRepository
@@ -25,6 +28,7 @@ class HomeViewModel @Inject constructor(
     private val dispatchers: Dispatchers,
     private val prefs: AppPreferences
 ) : BaseViewModel(dispatchers, repository) {
+    private val TAG = "HomeViewModel"
 
     var notesList = MutableLiveData<List<NoteModel>>()
     private var sortingState: String = AppConstants.sortByDate
@@ -136,6 +140,21 @@ class HomeViewModel @Inject constructor(
             repository.deleteAll()
             isEmptyList.postValue(true)
         }
+    }
+
+    fun getToken(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            Log.d(TAG, token!!)
+        })
     }
 
     fun searchInDatabase(query: String): LiveData<List<NoteModel>> {
