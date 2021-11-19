@@ -26,7 +26,7 @@ class FCMNotifications : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        if (message.data.isNotEmpty()) {
+        if (message.data.isEmpty()) {
             sendNotification(messageBody = message.notification?.body ?: "Hello there")
         } else {
             sendNotification(
