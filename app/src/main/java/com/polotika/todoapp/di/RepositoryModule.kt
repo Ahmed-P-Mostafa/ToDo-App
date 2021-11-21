@@ -49,4 +49,10 @@ object RepositoryModule {
         return AppPreferencesHelper(context = context)
     }
 
+    @Singleton
+    @Provides
+    fun providesContext(@ApplicationContext context: Context):Context{
+        return context
+    }
+
 }

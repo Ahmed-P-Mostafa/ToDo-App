@@ -3,7 +3,6 @@ package com.polotika.todoapp.pojo.utils
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
@@ -25,35 +24,18 @@ class FCMNotifications : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-
-        if (message.data.isEmpty()) {
-            sendNotification(messageBody = message.notification?.body ?: "Hello there")
-        } else {
-            sendNotification(
-                messageBody = message.notification?.body!!,
-                notificationIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
-                )
-            )
-        }
+        sendNotification(messageBody = message.notification?.body ?: "Hello there")
 
     }
 
-    private fun sendNotification(messageBody: String, notificationIntent: Intent? = null) {
+    private fun sendNotification(messageBody: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = if (notificationIntent != null) {
-            PendingIntent.getActivity(
-                this, 0 /* Request code */, notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT
-            )
-        } else {
-            PendingIntent.getActivity(
-                this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT
-            )
-        }
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0 /* Request code */, intent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
+
 
         val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder: NotificationCompat.Builder =

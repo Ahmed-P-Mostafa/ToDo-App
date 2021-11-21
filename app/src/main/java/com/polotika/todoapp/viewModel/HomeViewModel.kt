@@ -1,41 +1,62 @@
 package com.polotika.todoapp.viewModel
 
 import android.content.Context
+import android.content.IntentSender.SendIntentException
+import android.net.ConnectivityManager
 import android.util.Log
+import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallState
+import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.ktx.AppUpdateResult
-import com.google.android.play.core.ktx.requestUpdateFlow
+import com.google.android.play.core.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.data.models.PriorityModel
 import com.polotika.todoapp.pojo.data.repository.NotesRepository
 import com.polotika.todoapp.pojo.local.AppPreferences
 import com.polotika.todoapp.pojo.utils.AppConstants
+import com.polotika.todoapp.ui.HomeFragment
+import com.polotika.todoapp.ui.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import java.lang.Exception
+import java.net.InetAddress
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val context: Context,
     repository: NotesRepository,
     private val dispatchers: Dispatchers,
     private val prefs: AppPreferences
 ) : BaseViewModel(dispatchers, repository) {
     private val TAG = "HomeViewModel"
+    val REQ_CODE_UPDATE_VERSION = 330
 
     var notesList = MutableLiveData<List<NoteModel>>()
     private var sortingState: String = AppConstants.sortByDate
     private val sortFlow = MutableStateFlow(sortingState)
     private val searchFlow = MutableStateFlow<String>("")
+    private var installStateUpdatedListener: InstallStateUpdatedListener?=null
+    private var appUpdateManager:AppUpdateManager?=null
+    val updateStateMessage = MutableLiveData<String>()
 
-    var sortingFlow :MutableStateFlow<String>
+    val isTourGuideUiState = MutableLiveData<Boolean>()
+
+    //TODO make the viewModel get only the list sorted from repository
+    val isEmptyList = MutableLiveData(false)
+
+    var sortingFlow: MutableStateFlow<String>
         get() {
             return prefs.getSortState() as MutableStateFlow<String>
         }
@@ -93,47 +114,40 @@ class HomeViewModel @Inject constructor(
                     )
                 )
                 isTourGuideUiState.postValue(true)
-            }
-            else {
+            } else {
                 isTourGuideUiState.postValue(false)
             }
         }
     }
 
-    fun getAllNotesSorted(sortingValue: String? = null){
+    fun getAllNotesSorted(sortingValue: String? = null) {
         if (sortingValue == null) {
             viewModelScope.launch {
                 prefs.getSortState().collect {
                     sortingState = it
-                    notesList.postValue( repository.getAllNotes(it).value)
+                    notesList.postValue(repository.getAllNotes(it).value)
                 }
             }
 
         } else {
             val newList = repository.getAllNotes(sortingValue).value
-            notesList.value = newList?: emptyList()
+            notesList.value = newList ?: emptyList()
         }
     }
 
-    val sortedNotesList :Flow<List<NoteModel>> = combine(sortFlow,searchFlow){ sort, search ->
+    val sortedNotesList: Flow<List<NoteModel>> = combine(sortFlow, searchFlow) { sort, search ->
 
-        var sortedlist :List<NoteModel> = emptyList()
-         if (search!=null&& search.isNotEmpty()){
-             sortedlist =  searchInDatabase(query = search).value?: emptyList()
+        var sortedlist: List<NoteModel> = emptyList()
+        if (search != null && search.isNotEmpty()) {
+            sortedlist = searchInDatabase(query = search).value ?: emptyList()
         }
-        if (sort != sortingFlow.asLiveData().value){
-           sortedlist =  repository.getAllNotes(sort).value?: emptyList()
+        if (sort != sortingFlow.asLiveData().value) {
+            sortedlist = repository.getAllNotes(sort).value ?: emptyList()
             sortingFlow.emit(sort)
         }
 
         return@combine sortedlist
     }
-
-    val isTourGuideUiState = MutableLiveData<Boolean>()
-    //TODO make the viewModel get only the list sorted from repository
-
-    val isEmptyList = MutableLiveData(false)
-
 
     fun deleteAllNotes() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -142,7 +156,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getToken(){
+    fun getToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
@@ -186,36 +200,120 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun checkForAppUpdates(){
-        val appUpdateManager = AppUpdateManagerFactory.create(context)
-        viewModelScope.launch {
-            appUpdateManager.requestUpdateFlow().collect { updateResult->
-                when(updateResult){
-                    is AppUpdateResult.Available ->{
+    fun checkForAppUpdate() {
+        if (isNetworkConnected() ){
+            Log.d(TAG, "checkForAppUpdate: ")
 
-                    }
-                    is AppUpdateResult.InProgress ->{
+            appUpdateManager = AppUpdateManagerFactory.create(context)
+            val appUpdateInfoTask = appUpdateManager!!.appUpdateInfo
 
-                    }
-                    is AppUpdateResult.Downloaded ->{
-
+            installStateUpdatedListener =
+                InstallStateUpdatedListener { installState: InstallState ->
+                    if (installState.installStatus() == InstallStatus.DOWNLOADED)
+                        popupSnackbarForCompleteUpdateAndUnregister()
+                    else Log.d(TAG, "checkForAppUpdate: app updated")
+                }
+            appUpdateInfoTask.addOnSuccessListener { appUpdateInfo: AppUpdateInfo ->
+                Log.d(TAG, "checkForAppUpdate: ${appUpdateInfo.packageName() + appUpdateInfo.availableVersionCode()}")
+                Log.d(TAG, "checkForAppUpdate: ${appUpdateInfo.updateAvailability().toString() + UpdateAvailability.UPDATE_AVAILABLE.toString()}")
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                        appUpdateManager!!.registerListener(installStateUpdatedListener!!)
+                        startAppUpdateFlexible(appUpdateInfo)
+                    } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                        startAppUpdateImmediate(appUpdateInfo)
                     }
                 }
             }
         }
 
-// Returns an intent object that you use to check for an update.
-        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+    }
 
-// Checks that the platform will allow the specified type of update.
-        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                // This example applies an immediate update. To apply a flexible update
-                // instead, pass in AppUpdateType.FLEXIBLE
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
-            ) {
-                // Request the update.
-            }
+    private fun startAppUpdateFlexible(appUpdateInfo: AppUpdateInfo) {
+        try {
+            appUpdateManager!!.startUpdateFlowForResult(
+                appUpdateInfo,
+                AppUpdateType.FLEXIBLE,  // The current activity making the update request.
+                HomeFragment().requireActivity(),  // Include a request code to later monitor this update request.
+            REQ_CODE_UPDATE_VERSION
+            )
+        } catch (e: SendIntentException) {
+            e.printStackTrace()
+            unregisterInstallStateUpdListener()
+        }
+    }
+
+    private fun startAppUpdateImmediate(appUpdateInfo: AppUpdateInfo) {
+        try {
+            appUpdateManager!!.startUpdateFlowForResult(
+                appUpdateInfo,
+                AppUpdateType.IMMEDIATE,  // The current activity making the update request
+                HomeFragment().requireActivity(),
+                REQ_CODE_UPDATE_VERSION
+            )
+        } catch (e: SendIntentException) {
+            e.printStackTrace()
+        }
+    }
+
+
+    private fun popupSnackbarForCompleteUpdateAndUnregister() {
+        updateStateMessage.value = "An update has just been downloaded."
+
+
+    }
+
+    fun completeUpdate(){
+        appUpdateManager?.completeUpdate()
+        unregisterInstallStateUpdListener()
+    }
+
+    fun checkNewAppVersionState() {
+        if (appUpdateManager!=null){
+            appUpdateManager!!
+                .getAppUpdateInfo()
+                .addOnSuccessListener { appUpdateInfo: AppUpdateInfo ->
+                    if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                        Log.d(TAG, "checkNewAppVersionState: downloaded")
+                        popupSnackbarForCompleteUpdateAndUnregister()
+                    }
+                    if (appUpdateInfo.updateAvailability()
+                        == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                    ) {
+                        startAppUpdateImmediate(appUpdateInfo)
+                        Log.d(TAG, "checkNewAppVersionState: in progress")
+                    }
+                }
+        }
+
+    }
+
+    fun unregisterInstallStateUpdListener() {
+        if (appUpdateManager != null && installStateUpdatedListener != null) appUpdateManager!!.unregisterListener(
+            installStateUpdatedListener!!
+        )
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val connectivityManager = ContextCompat.getSystemService(
+            context,
+            ConnectivityManager::class.java
+        ) as ConnectivityManager
+        val isInternet =  cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected
+        Log.d(TAG, "isNetworkConnected: $isInternet")
+        return isInternet
+    }
+    private fun isInternetAvailable(): Boolean {
+        return try {
+            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            //You can replace it with your name
+            Log.d(TAG, "isInternetAvailable: ${ipAddr.equals("")}")
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            Log.d(TAG, "isInternetAvailable: false")
+            false
         }
     }
 

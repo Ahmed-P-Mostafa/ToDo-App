@@ -1,6 +1,10 @@
 package com.polotika.todoapp.ui
 
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -11,9 +15,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.ktx.AppUpdateResult
+import com.google.android.play.core.ktx.requestUpdateFlow
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentHomeBinding
 import com.polotika.todoapp.pojo.adapters.ListAdapter
@@ -25,7 +35,19 @@ import com.polotika.todoapp.pojo.utils.observeOnce
 import com.polotika.todoapp.pojo.utils.onQueryTextChanged
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import java.lang.Exception
+import androidx.core.content.ContextCompat.getSystemService
+
+import android.net.ConnectivityManager
+import androidx.core.content.ContextCompat
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import java.net.InetAddress
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() ,  TourGuideCallbacks {
@@ -50,7 +72,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
 
         ShowCaseTourGuide.setListener(this)
         hideKeyboard(requireActivity())
-        viewModel.getToken()
+        viewModel.checkForAppUpdate()
         return binding.root
     }
 
@@ -71,24 +93,21 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
 
     }
 
-/*
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        Log.d(TAG, "onQueryTextSubmit: $query")
-        if (query != null) {
-            searchInDatabase(query)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == viewModel.REQ_CODE_UPDATE_VERSION) {
+            if (resultCode != RESULT_OK) {
+                Log.d("Splash", "Update flow failed! Result code: $resultCode")
+                viewModel.unregisterInstallStateUpdListener()
+            }
         }
-        return true
     }
 
-    override fun onQueryTextChange(query: String?): Boolean {
-        Log.d(TAG, "onQueryTextChange: $query")
-        if (query !=null) {
-            searchInDatabase(query)
-        }
-        return true
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkNewAppVersionState()
     }
-*/
-
 
     private fun searchInDatabase(query: String) {
         Log.d(TAG, "searchInDatabase: $query")
@@ -143,6 +162,20 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
                     }
                     adapter.changeData(notes)
                 }
+            }
+
+            viewModel.updateStateMessage.observe(requireActivity()){
+                val snackbar = Snackbar.make(
+                    binding.getRoot(),
+                    "An update has just been downloaded.",
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                snackbar.setAction(
+                    "RESTART"
+                ) { view: View? -> viewModel.completeUpdate() }
+                snackbar.show()
+
+                viewModel.unregisterInstallStateUpdListener()
             }
         }
 
