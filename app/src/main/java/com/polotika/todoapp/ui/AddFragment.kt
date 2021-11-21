@@ -1,6 +1,7 @@
 package com.polotika.todoapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
@@ -11,6 +12,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.FragmentAddBinding
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.collect
 @AndroidEntryPoint
 class AddFragment : Fragment() {
     private val TAG = "AddFragment"
+    private val args by navArgs<AddFragmentArgs>()
 
     private val viewModel: AddViewModel by viewModels()
     lateinit var binding: FragmentAddBinding
@@ -35,6 +38,12 @@ class AddFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add, container,false)
         binding.vm = viewModel
+        Log.d(TAG, "onCreateView: ${args.shareNote}")
+
+        if (args.shareNote!=null){
+            Log.d(TAG, "onCreateView: ${args.shareNote}")
+            viewModel.body.setValue("• "+args.shareNote)
+        }
         val adapter = ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_list_item_1,

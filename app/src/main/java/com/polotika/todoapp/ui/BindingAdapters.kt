@@ -18,7 +18,8 @@ class BindingAdapters {
             when (value) {
                 true -> {
                     view.setOnClickListener {
-                        view.findNavController().navigate(R.id.action_homeFragment_to_addFragment)
+                        val newNoteAction = HomeFragmentDirections.actionHomeFragmentToAddFragment(null)
+                        view.findNavController().navigate(newNoteAction)
                     }
                 }
 

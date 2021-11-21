@@ -44,6 +44,7 @@ import androidx.core.content.ContextCompat.getSystemService
 
 import android.net.ConnectivityManager
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import java.net.InetAddress
@@ -77,8 +78,22 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val receivedIntent = activity?.intent
+        val receivedAction = receivedIntent?.action
+        Log.d(TAG, "onViewCreated: $receivedAction")
+        Log.d(TAG, "onViewCreated: ${activity?.intent?.type}")
+        if (receivedAction.equals(Intent.ACTION_SEND)){
+            Log.d(TAG, "onViewCreated: action send")
+            val shareAction = HomeFragmentDirections.actionHomeFragmentToAddFragment(receivedIntent?.getStringExtra(Intent.EXTRA_TEXT))
+            view.findNavController().navigate(shareAction)
+
+            activity?.intent = null
+        }
         observers()
-        viewModel.getAllNotesSorted()
+        viewModel.isAppFirstTimeRun()
+        //viewModel.getAllNotesSorted()
+
 
         setFragmentResultListener("add_edit_request") { _, bundle ->
             val message = bundle.get("add_edit_result")
@@ -120,9 +135,14 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
     private fun swipeToDelete() {
         val swipeToDeleteCallback = object : SwipeHelper() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val noteToDelete = adapter.list?.get(viewHolder.adapterPosition)
+                val index = viewHolder.adapterPosition
+                val noteToDelete = adapter.list?.get(index)
                 viewModel.deleteNote(noteToDelete!!)
-                restoreDeletedItem(noteToDelete)
+                adapter.removeNoteFromAdapter(noteToDelete)
+                restoreDeletedItem(noteToDelete,index)
+                if (adapter.list?.size==0){
+                    viewModel.isEmptyList.value = true
+                }
             }
         }
 
@@ -131,14 +151,16 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
-    private fun restoreDeletedItem(deletedNote: NoteModel) {
+    private fun restoreDeletedItem(deletedNote: NoteModel,index:Int) {
         Snackbar.make(
             requireContext(),
             requireView(),
             "'${deletedNote.title}' Deleted",
             Snackbar.LENGTH_LONG
         ).setAction("Undo") {
+            viewModel.isEmptyList.value = false
             viewModel.addNote(deletedNote)
+            adapter.addNewNoteToAdapter(deletedNote,index)
         }.show()
     }
 
@@ -160,7 +182,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
                         0-> viewModel.isEmptyList.value = true
                         else -> viewModel.isEmptyList.value = false
                     }
-                    adapter.changeData(notes)
+                    adapter.changeData(notes.toMutableList())
                 }
             }
 

@@ -68,56 +68,7 @@ class HomeViewModel @Inject constructor(
 
     init {
 
-        val d: Deferred<Boolean> = viewModelScope.async(dispatchers.IO) {
-            return@async prefs.isAppTourGuide().first()
-        }
 
-        viewModelScope.launch(dispatchers.IO) {
-
-            prefs.getSortState().collect { sortState ->
-                sortingState = sortState
-            }
-            if (d.await()) {
-                addNote(
-                    NoteModel(
-                        title = "Tasks",
-                        description = "Learn new thins\nDesign Things\nShare my work\nStay hydrated",
-                        priority = PriorityModel.High
-                    )
-                )
-                addNote(
-                    NoteModel(
-                        title = "Groceries",
-                        description = "Cat food\nTomatoes\nTuna\nMilk",
-                        priority = PriorityModel.Low
-                    )
-                )
-                addNote(
-                    NoteModel(
-                        title = "Travel",
-                        description = "Canada\nParis\nItaly\nSwitzerland",
-                        priority = PriorityModel.Low
-                    )
-                )
-                addNote(
-                    NoteModel(
-                        title = "Reminder",
-                        description = "Feed the cat\nWater the plants\nGo to gym\nFinish last chapter",
-                        priority = PriorityModel.High
-                    )
-                )
-                addNote(
-                    NoteModel(
-                        title = "Interview questions",
-                        description = "Ask for team size\nIf any senior in the team ask for his name to search for it on linked in\nHow many days in the week and working hours",
-                        priority = PriorityModel.High
-                    )
-                )
-                isTourGuideUiState.postValue(true)
-            } else {
-                isTourGuideUiState.postValue(false)
-            }
-        }
     }
 
     fun getAllNotesSorted(sortingValue: String? = null) {
@@ -314,6 +265,67 @@ class HomeViewModel @Inject constructor(
         } catch (e: Exception) {
             Log.d(TAG, "isInternetAvailable: false")
             false
+        }
+    }
+
+    fun isAppFirstTimeRun() {
+        Log.d(TAG, "isAppFirstTimeRun: ")
+        var isAwait = true
+        val d: Deferred<Boolean> = viewModelScope.async(dispatchers.IO) {
+            return@async prefs.isAppTourGuide().first()
+        }
+
+
+        viewModelScope.launch(dispatchers.IO) {
+            Log.d(TAG, "isAppFirstTimeRun: ${d.await()}")
+            if (d.await()) {
+                Log.d(TAG, "isAppFirstTimeRun: await is true")
+                addNote(
+                    NoteModel(
+                        title = "Tasks",
+                        description = "Learn new thins\nDesign Things\nShare my work\nStay hydrated",
+                        priority = PriorityModel.High
+                    )
+                )
+                addNote(
+                    NoteModel(
+                        title = "Groceries",
+                        description = "Cat food\nTomatoes\nTuna\nMilk",
+                        priority = PriorityModel.Low
+                    )
+                )
+                addNote(
+                    NoteModel(
+                        title = "Travel",
+                        description = "Canada\nParis\nItaly\nSwitzerland",
+                        priority = PriorityModel.Low
+                    )
+                )
+                addNote(
+                    NoteModel(
+                        title = "Reminder",
+                        description = "Feed the cat\nWater the plants\nGo to gym\nFinish last chapter",
+                        priority = PriorityModel.High
+                    )
+                )
+                addNote(
+                    NoteModel(
+                        title = "Interview questions",
+                        description = "Ask for team size\nIf any senior in the team ask for his name to search for it on linked in\nHow many days in the week and working hours",
+                        priority = PriorityModel.High
+                    )
+                )
+                isTourGuideUiState.postValue(true)
+            } else {
+                isTourGuideUiState.postValue(false)
+            }
+            getAllNotesSorted()
+
+
+            prefs.getSortState().collect { sortState ->
+                sortingState = sortState
+            }
+            Log.d(TAG, "isAppTouGuide ${d.await()}: ")
         }
     }
 

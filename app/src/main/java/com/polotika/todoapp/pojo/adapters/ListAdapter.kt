@@ -11,7 +11,7 @@ import com.polotika.todoapp.databinding.NoteItemBinding
 import com.polotika.todoapp.pojo.data.models.NoteModel
 import com.polotika.todoapp.pojo.utils.NotesListDiffUtil
 
-class ListAdapter(var list: List<NoteModel>? = emptyList()) :
+class ListAdapter(var list: MutableList<NoteModel>? = mutableListOf()) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     private val TAG = "ListAdapter"
 
@@ -48,11 +48,21 @@ class ListAdapter(var list: List<NoteModel>? = emptyList()) :
 
     }
 
-    fun changeData(list: List<NoteModel>) {
+    fun changeData(list: MutableList<NoteModel>) {
         Log.d(TAG, "changeData: ${list.toString()}")
         val diffUtil = NotesListDiffUtil(this.list!!, list)
         val results = DiffUtil.calculateDiff(diffUtil)
         this.list = list
         results.dispatchUpdatesTo(this)
+    }
+
+    fun addNewNoteToAdapter(newNote :NoteModel,index:Int){
+        list?.add(index,newNote)
+        notifyDataSetChanged()
+    }
+
+    fun removeNoteFromAdapter(note:NoteModel){
+        list?.remove(note)
+        notifyDataSetChanged()
     }
 }

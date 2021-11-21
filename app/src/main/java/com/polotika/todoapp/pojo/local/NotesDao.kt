@@ -7,7 +7,7 @@ import com.polotika.todoapp.pojo.data.models.NoteModel
 @Dao
 interface NotesDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNote(noteModel: NoteModel)
 
     @Update
