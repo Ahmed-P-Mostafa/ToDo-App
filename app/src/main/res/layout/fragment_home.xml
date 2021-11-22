@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.polotika.todoapp.viewModel.HomeViewModel" />
+            type="com.polotika.pointyNotes.viewModel.HomeViewModel" />
 
         <import type="android.view.View" />
 
