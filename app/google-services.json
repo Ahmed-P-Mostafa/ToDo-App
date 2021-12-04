@@ -7,36 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:886259007389:android:3edda5555fc97fa1b27974",
-        "android_client_info": {
-          "package_name": "com.polotika.pointyNotes"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "886259007389-8atpk09qsg45ta22qec2t7vu99fus6v3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDzxIXTJ8Zbzp934po1c2j2_MNlj1O8u5I"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "886259007389-8atpk09qsg45ta22qec2t7vu99fus6v3.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:886259007389:android:6828f34b483594e1b27974",
+        "mobilesdk_app_id": "1:886259007389:android:e451f9c6a685cd5eb27974",
         "android_client_info": {
           "package_name": "com.polotika.todoapp"
         }
