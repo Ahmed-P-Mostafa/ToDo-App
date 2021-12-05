@@ -46,9 +46,9 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
     ): View {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false)
         binding.lifecycleOwner = this
-        //binding.vm = viewModel
+        binding.vm = viewModel
         adapter = ListAdapter()
-        //binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = adapter
 
         swipeToDelete()
         setHasOptionsMenu(true)
@@ -56,7 +56,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
         ShowCaseTourGuide.setListener(this)
         hideKeyboard(requireActivity())
         viewModel.checkForAppUpdate()
-        return inflater.inflate(R.layout.fragment_home,container,false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +79,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
         }
         observers()
         viewModel.isAppFirstTimeRun()
-        //viewModel.getAllNotesSorted()
+        viewModel.getAllNotesSorted()
 
 
         setFragmentResultListener("add_edit_request") { _, bundle ->
@@ -114,7 +114,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
     private fun searchInDatabase(query: String) {
         Log.d(TAG, "searchInDatabase: $query")
         viewModel.searchInDatabase("%$query%").observeOnce(viewLifecycleOwner){
-            //adapter.changeData(it)
+            adapter.changeData(it as MutableList<NoteModel>)
             viewModel.notesList.value = it
         }
     }
@@ -135,7 +135,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
 
 
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
-        //itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
     private fun restoreDeletedItem(deletedNote: NoteModel,index:Int) {
@@ -152,12 +152,26 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        Log.d(TAG, "onCreateOptionsMenu: ")
         inflater.inflate(R.menu.home_menu, menu)
         val search = menu.findItem(R.id.menu_search)
         val searchView = search.actionView as SearchView
         searchView.onQueryTextChanged{
             searchInDatabase(it)
         }
+
+        viewModel.isTourGuideUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    ShowCaseTourGuide.showCaseSearch(searchView,requireActivity())
+                }
+                false -> {
+
+                }
+            }
+        }
+
+
     }
 
     private fun observers() {
@@ -188,16 +202,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
             }
         }
 
-        viewModel.isTourGuideUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                true -> {
-                    ShowCaseTourGuide.showCaseSearch(view?.rootView?.findViewById(R.id.menu_search)!!,requireActivity())
-                }
-                false -> {
 
-                }
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -237,17 +242,17 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        //binding.unbind()
+        binding.unbind()
     }
 
     override fun onSearchDoneCallback() {
-    /*    ShowCaseTourGuide.showCaseSwipeToDelete(binding.recyclerView.getChildAt(0),requireActivity())
+        ShowCaseTourGuide.showCaseSwipeToDelete(binding.recyclerView.getChildAt(0),requireActivity())
         lifecycleScope.launchWhenResumed {
             delay(1000L)
             SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,300,ItemTouchHelper.START,500)
             delay(1000)
             SwipeUtils.swipeRecyclerViewItem(binding.recyclerView,0,300,ItemTouchHelper.END,500)
-        }*/
+        }
     }
 
     override fun onNewNoteDoneCallback() {
@@ -255,7 +260,7 @@ class HomeFragment : Fragment() ,  TourGuideCallbacks {
     }
 
     override fun onSwipeDoneCallback() {
-        //ShowCaseTourGuide.showCaseNewNoteButton(binding.fabAdd,requireActivity())
+        ShowCaseTourGuide.showCaseNewNoteButton(binding.fabAdd,requireActivity())
     }
 
 
