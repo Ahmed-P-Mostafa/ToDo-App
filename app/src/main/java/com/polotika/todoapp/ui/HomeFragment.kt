@@ -13,10 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
+import com.polotika.todoapp.databinding.FragmentHomeBinding
 import com.polotika.todoapp.pojo.adapters.ListAdapter
 import com.polotika.todoapp.pojo.adapters.SwipeHelper
 import com.polotika.todoapp.pojo.adapters.SwipeUtils
@@ -27,10 +31,6 @@ import com.polotika.todoapp.pojo.utils.onQueryTextChanged
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.polotika.todoapp.databinding.FragmentHomeBinding
 
 
 @AndroidEntryPoint

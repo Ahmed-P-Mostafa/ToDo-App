@@ -25,7 +25,6 @@ import com.polotika.todoapp.ui.HomeFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import java.lang.Exception
 import java.net.InetAddress
 import javax.inject.Inject
 
