@@ -52,7 +52,7 @@ class AddFragment : Fragment() {
         )
         binding.priorityTv.setAdapter(adapter)
 
-        binding.priorityTv.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        binding.priorityTv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
 
             when (position) {
                 0-> {

@@ -7,8 +7,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.polotika.todoapp.R
-import com.polotika.todoapp.databinding.NoteItemBinding
 import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.databinding.NoteItemBinding
 import com.polotika.todoapp.utils.NotesListDiffUtil
 
 class ListAdapter(var list: MutableList<NoteModel>? = mutableListOf()) :

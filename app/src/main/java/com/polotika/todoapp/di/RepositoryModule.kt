@@ -1,12 +1,12 @@
 package com.polotika.todoapp.di
 
 import android.content.Context
-import com.polotika.todoapp.data.repository.NotesRepository
-import com.polotika.todoapp.data.repository.NotesRepositoryImpl
 import com.polotika.todoapp.data.local.AppPreferences
 import com.polotika.todoapp.data.local.AppPreferencesHelper
 import com.polotika.todoapp.data.local.NoteDatabase
 import com.polotika.todoapp.data.local.NotesDao
+import com.polotika.todoapp.data.repository.NotesRepository
+import com.polotika.todoapp.data.repository.NotesRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

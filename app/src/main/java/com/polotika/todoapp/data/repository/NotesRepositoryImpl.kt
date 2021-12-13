@@ -2,8 +2,8 @@ package com.polotika.todoapp.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.polotika.todoapp.data.models.NoteModel
 import com.polotika.todoapp.data.local.NotesDao
+import com.polotika.todoapp.data.models.NoteModel
 import com.polotika.todoapp.utils.AppConstants
 import javax.inject.Inject
 

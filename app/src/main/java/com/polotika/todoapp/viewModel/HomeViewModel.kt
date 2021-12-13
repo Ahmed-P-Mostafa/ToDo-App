@@ -16,12 +16,12 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.messaging.FirebaseMessaging
+import com.polotika.todoapp.data.local.AppPreferences
 import com.polotika.todoapp.data.models.NoteModel
 import com.polotika.todoapp.data.models.PriorityModel
 import com.polotika.todoapp.data.repository.NotesRepository
-import com.polotika.todoapp.data.local.AppPreferences
-import com.polotika.todoapp.utils.AppConstants
 import com.polotika.todoapp.ui.HomeFragment
+import com.polotika.todoapp.utils.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
