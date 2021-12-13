@@ -34,6 +34,7 @@ https://user-images.githubusercontent.com/61784191/131763319-0c8f979c-4602-4cdd-
 
 * [Kotlin 1.5.10](https://kotlinlang.org/) - The programming languages used
 * MVVM - Design Pattern
+* Hilt
 * Kotlin Flow
 * Room Database
 * Data Store
@@ -41,3 +42,4 @@ https://user-images.githubusercontent.com/61784191/131763319-0c8f979c-4602-4cdd-
 * Binding Adapters
 * Kotlin Coroutines
 * Navigation Component
+
