@@ -1,14 +1,15 @@
 # ToDo App
 
-Save your notes and todo jobs with content description in 3 differnet priorities
+Android App to **save** your `notes` and `todo jobs` with content description in 3 differnet priorities.
 
 
 
 ## You can:
 
-* Sort the notes by its priority
-* Search through the database by note title
-* Edit the note content or priority and delete the note
+* Sort the notes by its priority.
+* Search by note title.
+* Edit the note content or priority.
+* Delete the note.
 
 
 ## Getting Started
@@ -20,18 +21,7 @@ https://github.com/Ahmed-P-Mostafa/ToDo-App.git
 ```
 
 
-## Prerequisites
-
-The things you'll need in order to use the app and how to install them
-
-* only mobile phone.
-
-
-
 ### How to use
-
-
-
 
 <img src="ScreenShots/1.jpg" width="200"> <img src="ScreenShots/2.jpg" width="200"> <img src="ScreenShots/3.jpg" width="200"> <img src="ScreenShots/4.jpg" width="200">
 
@@ -44,6 +34,7 @@ https://user-images.githubusercontent.com/61784191/131763319-0c8f979c-4602-4cdd-
 
 * [Kotlin 1.5.10](https://kotlinlang.org/) - The programming languages used
 * MVVM - Design Pattern
+* Hilt
 * Kotlin Flow
 * Room Database
 * Data Store
@@ -51,3 +42,4 @@ https://user-images.githubusercontent.com/61784191/131763319-0c8f979c-4602-4cdd-
 * Binding Adapters
 * Kotlin Coroutines
 * Navigation Component
+
