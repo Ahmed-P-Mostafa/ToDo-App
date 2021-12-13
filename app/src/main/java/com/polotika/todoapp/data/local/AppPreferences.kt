@@ -1,4 +1,4 @@
-package com.polotika.todoapp.pojo.local
+package com.polotika.todoapp.data.local
 
 import kotlinx.coroutines.flow.Flow
 

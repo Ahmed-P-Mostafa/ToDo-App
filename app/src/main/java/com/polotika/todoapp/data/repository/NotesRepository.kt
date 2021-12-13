@@ -1,7 +1,7 @@
-package com.polotika.todoapp.pojo.data.repository
+package com.polotika.todoapp.data.repository
 
 import androidx.lifecycle.LiveData
-import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.data.models.NoteModel
 
 interface NotesRepository {
 

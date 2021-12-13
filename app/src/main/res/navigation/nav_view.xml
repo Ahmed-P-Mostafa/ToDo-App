@@ -53,6 +53,6 @@
             app:popUpToInclusive="true" />
         <argument
             android:name="note"
-            app:argType="com.polotika.todoapp.pojo.data.models.NoteModel" />
+            app:argType="com.polotika.todoapp.data.models.NoteModel" />
     </fragment>
 </navigation>

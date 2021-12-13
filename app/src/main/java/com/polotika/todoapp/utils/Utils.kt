@@ -1,4 +1,4 @@
-package com.polotika.todoapp.pojo.utils
+package com.polotika.todoapp.utils
 
 import android.app.Activity
 import android.content.Context

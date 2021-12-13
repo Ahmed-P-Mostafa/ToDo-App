@@ -1,4 +1,4 @@
-package com.polotika.todoapp.pojo.adapters
+package com.polotika.todoapp.ui.adapters
 
 import android.animation.ValueAnimator
 import android.os.SystemClock

@@ -4,9 +4,9 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.data.models.PriorityModel
-import com.polotika.todoapp.pojo.data.repository.NotesRepository
+import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.data.models.PriorityModel
+import com.polotika.todoapp.data.repository.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

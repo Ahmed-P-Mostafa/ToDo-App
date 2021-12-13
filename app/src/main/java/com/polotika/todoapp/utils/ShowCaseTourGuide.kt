@@ -1,4 +1,4 @@
-package com.polotika.todoapp.ui
+package com.polotika.todoapp.utils
 
 import android.content.Context
 import android.view.View

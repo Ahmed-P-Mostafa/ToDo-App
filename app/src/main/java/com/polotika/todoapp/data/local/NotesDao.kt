@@ -1,8 +1,8 @@
-package com.polotika.todoapp.pojo.local
+package com.polotika.todoapp.data.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.data.models.NoteModel
 
 @Dao
 interface NotesDao {

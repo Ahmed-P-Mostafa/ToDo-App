@@ -1,23 +1,23 @@
-package com.polotika.todoapp.pojo.data.repository
+package com.polotika.todoapp.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.local.NotesDao
-import com.polotika.todoapp.pojo.utils.AppConstants
+import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.data.local.NotesDao
+import com.polotika.todoapp.utils.AppConstants
 import javax.inject.Inject
 
 class NotesRepositoryImpl @Inject constructor(private val notesDao: NotesDao) :NotesRepository {
 
     override fun getAllNotes(sortingState:String):LiveData<List<NoteModel>>{
         return when(sortingState){
-            AppConstants.sortByDate ->{
+            AppConstants.SORT_BY_DATE_KEY ->{
                 MutableLiveData(sortByDate())
             }
-            AppConstants.sortByImportanceLow -> {
+            AppConstants.SORT_BY_IMPORTANCE_LOW -> {
                 MutableLiveData(sortByLowPriority())
             }
-            AppConstants.sortByImportanceHigh -> {
+            AppConstants.SORT_BY_IMPORTANCE_HIGH -> {
                MutableLiveData(sortByHighPriority())
             }
             else -> {
@@ -45,9 +45,9 @@ class NotesRepositoryImpl @Inject constructor(private val notesDao: NotesDao) :N
     override fun searchInDatabase(query:String,sortingState: String):LiveData<List<NoteModel>>{
 
        return when(sortingState){
-            AppConstants.sortByDate -> notesDao.searchInDatabaseWhereSortByDate(query = query)
-           AppConstants.sortByImportanceHigh ->notesDao.searchInDatabaseWherePriorityHigh(query)
-           AppConstants.sortByImportanceLow ->notesDao.searchInDatabaseWherePriorityLow(query)
+            AppConstants.SORT_BY_DATE_KEY -> notesDao.searchInDatabaseWhereSortByDate(query = query)
+           AppConstants.SORT_BY_IMPORTANCE_HIGH ->notesDao.searchInDatabaseWherePriorityHigh(query)
+           AppConstants.SORT_BY_IMPORTANCE_LOW ->notesDao.searchInDatabaseWherePriorityLow(query)
            else -> notesDao.searchInDatabaseWhereSortByDate(query)
        }
     }

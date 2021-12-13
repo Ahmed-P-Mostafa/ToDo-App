@@ -20,21 +20,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.polotika.todoapp.R
+import com.polotika.todoapp.data.models.NoteModel
 import com.polotika.todoapp.databinding.FragmentHomeBinding
-import com.polotika.todoapp.pojo.adapters.ListAdapter
-import com.polotika.todoapp.pojo.adapters.SwipeHelper
-import com.polotika.todoapp.pojo.adapters.SwipeUtils
-import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.utils.hideKeyboard
-import com.polotika.todoapp.pojo.utils.observeOnce
-import com.polotika.todoapp.pojo.utils.onQueryTextChanged
+import com.polotika.todoapp.ui.adapters.ListAdapter
+import com.polotika.todoapp.ui.adapters.SwipeHelper
+import com.polotika.todoapp.ui.adapters.SwipeUtils
+import com.polotika.todoapp.utils.*
 import com.polotika.todoapp.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() ,  TourGuideCallbacks {
+class HomeFragment : Fragment() , TourGuideCallbacks {
     private val TAG = "HomeFragment"
     private val viewModel: HomeViewModel by viewModels()
     lateinit var adapter: ListAdapter

@@ -1,12 +1,12 @@
-package com.polotika.todoapp.pojo.adapters
+package com.polotika.todoapp.ui.adapters
 
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.polotika.todoapp.R
-import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.data.models.PriorityModel
+import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.data.models.PriorityModel
 
 val prioritiesList = listOf("Low Priority", "Medium Priority", "High Priority")
 

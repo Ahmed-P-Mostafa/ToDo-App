@@ -1,7 +1,7 @@
-package com.polotika.todoapp.pojo.utils
+package com.polotika.todoapp.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.polotika.todoapp.pojo.data.models.NoteModel
+import com.polotika.todoapp.data.models.NoteModel
 
 class NotesListDiffUtil(private val oldList:List<NoteModel>, private val newList:List<NoteModel>) : DiffUtil.Callback() {
     override fun getOldListSize()= oldList.size

@@ -1,4 +1,4 @@
-package com.polotika.todoapp.pojo.utils
+package com.polotika.todoapp.utils
 
 import android.util.Log
 import androidx.annotation.MainThread
@@ -41,6 +41,6 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
 
     companion object {
 
-        private val TAG = "com.polotika.todoapp.pojo.utils.SingleLiveEvent"
+        private val TAG = "com.polotika.todoapp.utils.SingleLiveEvent"
     }
 }

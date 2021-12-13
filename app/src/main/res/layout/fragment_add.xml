@@ -61,7 +61,7 @@
             android:gravity="start|top"
             android:hint="@string/description">
 
-            <com.polotika.todoapp.pojo.utils.BulletPointedEditText
+            <com.polotika.todoapp.utils.BulletPointedEditText
                 android:id="@+id/description_et"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

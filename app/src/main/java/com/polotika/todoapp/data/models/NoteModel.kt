@@ -1,4 +1,4 @@
-package com.polotika.todoapp.pojo.data.models
+package com.polotika.todoapp.data.models
 
 import android.os.Parcelable
 import androidx.room.Entity

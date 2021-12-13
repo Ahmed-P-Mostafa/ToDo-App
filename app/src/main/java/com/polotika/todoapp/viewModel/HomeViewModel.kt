@@ -16,11 +16,11 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.messaging.FirebaseMessaging
-import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.data.models.PriorityModel
-import com.polotika.todoapp.pojo.data.repository.NotesRepository
-import com.polotika.todoapp.pojo.local.AppPreferences
-import com.polotika.todoapp.pojo.utils.AppConstants
+import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.data.models.PriorityModel
+import com.polotika.todoapp.data.repository.NotesRepository
+import com.polotika.todoapp.data.local.AppPreferences
+import com.polotika.todoapp.utils.AppConstants
 import com.polotika.todoapp.ui.HomeFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
     val REQ_CODE_UPDATE_VERSION = 330
 
     var notesList = MutableLiveData<List<NoteModel>>()
-    private var sortingState: String = AppConstants.sortByDate
+    private var sortingState: String = AppConstants.SORT_BY_DATE_KEY
     private val sortFlow = MutableStateFlow(sortingState)
     private val searchFlow = MutableStateFlow<String>("")
     private var installStateUpdatedListener: InstallStateUpdatedListener?=null
@@ -129,15 +129,15 @@ class HomeViewModel @Inject constructor(
     }
 
     fun sortByHighPriority() {
-        changeNotesSortingType(AppConstants.sortByImportanceHigh)
+        changeNotesSortingType(AppConstants.SORT_BY_IMPORTANCE_HIGH)
     }
 
     fun sortByLowPriority() {
-        changeNotesSortingType(AppConstants.sortByImportanceLow)
+        changeNotesSortingType(AppConstants.SORT_BY_IMPORTANCE_LOW)
     }
 
     fun sortByDate() {
-        changeNotesSortingType(AppConstants.sortByDate)
+        changeNotesSortingType(AppConstants.SORT_BY_DATE_KEY)
     }
 
     fun showCaseTourGuideFinished() {

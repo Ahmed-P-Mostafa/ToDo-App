@@ -1,7 +1,7 @@
-package com.polotika.todoapp.pojo.utils
+package com.polotika.todoapp.utils
 
 import androidx.room.TypeConverter
-import com.polotika.todoapp.pojo.data.models.PriorityModel
+import com.polotika.todoapp.data.models.PriorityModel
 
 class PriorityConverter {
 

@@ -7,7 +7,7 @@
 
         <variable
             name="note"
-            type="com.polotika.todoapp.pojo.data.models.NoteModel" />
+            type="com.polotika.todoapp.data.models.NoteModel" />
 
     </data>
 

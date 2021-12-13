@@ -1,4 +1,4 @@
-package com.polotika.todoapp.pojo.data.models
+package com.polotika.todoapp.data.models
 
 enum class PriorityModel {
     High,Medium,Low

@@ -6,8 +6,8 @@ import androidx.databinding.BindingAdapter
 import androidx.navigation.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.polotika.todoapp.R
-import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.data.models.PriorityModel
+import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.data.models.PriorityModel
 
 class BindingAdapters {
 

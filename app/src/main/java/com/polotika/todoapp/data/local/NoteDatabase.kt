@@ -1,12 +1,12 @@
-package com.polotika.todoapp.pojo.local
+package com.polotika.todoapp.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.utils.PriorityConverter
+import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.utils.PriorityConverter
 
 @Database(entities = [NoteModel::class], version = 3, exportSchema = false)
 @TypeConverters(PriorityConverter::class)

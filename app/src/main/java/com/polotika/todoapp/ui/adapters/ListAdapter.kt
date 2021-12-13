@@ -1,4 +1,4 @@
-package com.polotika.todoapp.pojo.adapters
+package com.polotika.todoapp.ui.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.polotika.todoapp.R
 import com.polotika.todoapp.databinding.NoteItemBinding
-import com.polotika.todoapp.pojo.data.models.NoteModel
-import com.polotika.todoapp.pojo.utils.NotesListDiffUtil
+import com.polotika.todoapp.data.models.NoteModel
+import com.polotika.todoapp.utils.NotesListDiffUtil
 
 class ListAdapter(var list: MutableList<NoteModel>? = mutableListOf()) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {
