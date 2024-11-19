@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.polotika.todoapp.viewModel.AddViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        tools:context=".ui.AddFragment">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/title_til"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="@string/title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/title_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:text="@={vm.title}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/priority_til"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:endIconMode="dropdown_menu"
+
+            >
+
+            <AutoCompleteTextView
+                android:id="@+id/priority_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/select_priority"
+                android:inputType="none"
+                android:text="@={vm.priority}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/description_til"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start|top"
+            android:hint="@string/description">
+
+            <com.polotika.todoapp.utils.BulletPointedEditText
+                android:id="@+id/description_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:padding="16dp"
+                android:text="@={vm.body}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "886259007389",
+    "project_id": "todo-app-5670d",
+    "storage_bucket": "todo-app-5670d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886259007389:android:e451f9c6a685cd5eb27974",
+        "android_client_info": {
+          "package_name": "com.polotika.todoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886259007389-oemoj7bpur9jiv66i8a49o8n078dkmi6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.polotika.todoapp",
+            "certificate_hash": "347637297de216d534c1254a3816bea1e7686dd0"
+          }
+        },
+        {
+          "client_id": "886259007389-8atpk09qsg45ta22qec2t7vu99fus6v3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzxIXTJ8Zbzp934po1c2j2_MNlj1O8u5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886259007389-8atpk09qsg45ta22qec2t7vu99fus6v3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
