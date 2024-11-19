@@ -8,7 +8,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.polotika.todoapp.R
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
